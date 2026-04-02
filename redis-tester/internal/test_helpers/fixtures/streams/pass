@@ -1,0 +1,476 @@
+Debug = true
+
+[33m[tester::#CC3] [0m[94mRunning tests for Stage #CC3 (cc3)[0m
+[33m[tester::#CC3] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#CC3] [client] [0m[36mConnected (port 57256 -> port 6379)[0m
+[33m[tester::#CC3] [client] [0m[94m$ redis-cli SET pear orange[0m
+[33m[tester::#CC3] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$4\r\npear\r\n$6\r\norange\r\n"[0m
+[33m[tester::#CC3] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#CC3] [client] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#CC3] [client] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#CC3] [client] [0m[94m> TYPE pear[0m
+[33m[tester::#CC3] [client] [0m[36mSent bytes: "*2\r\n$4\r\nTYPE\r\n$4\r\npear\r\n"[0m
+[33m[tester::#CC3] [client] [0m[36mReceived bytes: "+string\r\n"[0m
+[33m[tester::#CC3] [client] [0m[36mReceived RESP simple string: "string"[0m
+[33m[tester::#CC3] [client] [0m[92m✔︎ Received "string"[0m
+[33m[tester::#CC3] [client] [0m[94m> TYPE missing_key_orange[0m
+[33m[tester::#CC3] [client] [0m[36mSent bytes: "*2\r\n$4\r\nTYPE\r\n$18\r\nmissing_key_orange\r\n"[0m
+[33m[tester::#CC3] [client] [0m[36mReceived bytes: "+none\r\n"[0m
+[33m[tester::#CC3] [client] [0m[36mReceived RESP simple string: "none"[0m
+[33m[tester::#CC3] [client] [0m[92m✔︎ Received "none"[0m
+[33m[tester::#CC3] [0m[92mTest passed.[0m
+[33m[tester::#CC3] [0m[36mTerminating program[0m
+[33m[tester::#CC3] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#CF6] [0m[94mRunning tests for Stage #CF6 (cf6)[0m
+[33m[tester::#CF6] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#CF6] [client] [0m[36mConnected (port 57284 -> port 6379)[0m
+[33m[tester::#CF6] [client] [0m[94m$ redis-cli XADD raspberry 0-1 foo bar[0m
+[33m[tester::#CF6] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$9\r\nraspberry\r\n$3\r\n0-1\r\n$3\r\nfoo\r\n$3\r\nbar\r\n"[0m
+[33m[tester::#CF6] [client] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
+[33m[tester::#CF6] [client] [0m[36mReceived RESP bulk string: "0-1"[0m
+[33m[tester::#CF6] [client] [0m[92m✔︎ Received "0-1"[0m
+[33m[tester::#CF6] [client] [0m[94m> TYPE raspberry[0m
+[33m[tester::#CF6] [client] [0m[36mSent bytes: "*2\r\n$4\r\nTYPE\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#CF6] [client] [0m[36mReceived bytes: "+stream\r\n"[0m
+[33m[tester::#CF6] [client] [0m[36mReceived RESP simple string: "stream"[0m
+[33m[tester::#CF6] [client] [0m[92m✔︎ Received "stream"[0m
+[33m[tester::#CF6] [0m[92mTest passed.[0m
+[33m[tester::#CF6] [0m[36mTerminating program[0m
+[33m[tester::#CF6] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#HQ8] [0m[94mRunning tests for Stage #HQ8 (hq8)[0m
+[33m[tester::#HQ8] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#HQ8] [client] [0m[36mConnected (port 57314 -> port 6379)[0m
+[33m[tester::#HQ8] [client] [0m[94m$ redis-cli XADD mango 1-1 blueberry apple[0m
+[33m[tester::#HQ8] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\nmango\r\n$3\r\n1-1\r\n$9\r\nblueberry\r\n$5\r\napple\r\n"[0m
+[33m[tester::#HQ8] [client] [0m[36mReceived bytes: "$3\r\n1-1\r\n"[0m
+[33m[tester::#HQ8] [client] [0m[36mReceived RESP bulk string: "1-1"[0m
+[33m[tester::#HQ8] [client] [0m[92m✔︎ Received "1-1"[0m
+[33m[tester::#HQ8] [client] [0m[94m> XADD mango 1-2 strawberry pineapple[0m
+[33m[tester::#HQ8] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\nmango\r\n$3\r\n1-2\r\n$10\r\nstrawberry\r\n$9\r\npineapple\r\n"[0m
+[33m[tester::#HQ8] [client] [0m[36mReceived bytes: "$3\r\n1-2\r\n"[0m
+[33m[tester::#HQ8] [client] [0m[36mReceived RESP bulk string: "1-2"[0m
+[33m[tester::#HQ8] [client] [0m[92m✔︎ Received "1-2"[0m
+[33m[tester::#HQ8] [client] [0m[94m> XADD mango 1-2 orange grape[0m
+[33m[tester::#HQ8] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\nmango\r\n$3\r\n1-2\r\n$6\r\norange\r\n$5\r\ngrape\r\n"[0m
+[33m[tester::#HQ8] [client] [0m[36mReceived bytes: "-ERR The ID specified in XADD is equal or smaller than the target stream top item\r\n"[0m
+[33m[tester::#HQ8] [client] [0m[36mReceived RESP error: "ERR The ID specified in XADD is equal or smaller than the target stream top item"[0m
+[33m[tester::#HQ8] [client] [0m[92m✔︎ Received "ERR The ID specified in XADD is equal or smaller than the target stream top item"[0m
+[33m[tester::#HQ8] [client] [0m[94m> XADD mango 0-3 pear raspberry[0m
+[33m[tester::#HQ8] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\nmango\r\n$3\r\n0-3\r\n$4\r\npear\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#HQ8] [client] [0m[36mReceived bytes: "-ERR The ID specified in XADD is equal or smaller than the target stream top item\r\n"[0m
+[33m[tester::#HQ8] [client] [0m[36mReceived RESP error: "ERR The ID specified in XADD is equal or smaller than the target stream top item"[0m
+[33m[tester::#HQ8] [client] [0m[92m✔︎ Received "ERR The ID specified in XADD is equal or smaller than the target stream top item"[0m
+[33m[tester::#HQ8] [client] [0m[94m> XADD mango 0-0 mango banana[0m
+[33m[tester::#HQ8] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\nmango\r\n$3\r\n0-0\r\n$5\r\nmango\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#HQ8] [client] [0m[36mReceived bytes: "-ERR The ID specified in XADD must be greater than 0-0\r\n"[0m
+[33m[tester::#HQ8] [client] [0m[36mReceived RESP error: "ERR The ID specified in XADD must be greater than 0-0"[0m
+[33m[tester::#HQ8] [client] [0m[92m✔︎ Received "ERR The ID specified in XADD must be greater than 0-0"[0m
+[33m[tester::#HQ8] [0m[92mTest passed.[0m
+[33m[tester::#HQ8] [0m[36mTerminating program[0m
+[33m[tester::#HQ8] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#YH3] [0m[94mRunning tests for Stage #YH3 (yh3)[0m
+[33m[tester::#YH3] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#YH3] [client] [0m[36mConnected (port 57334 -> port 6379)[0m
+[33m[tester::#YH3] [client] [0m[94m$ redis-cli XADD banana 0-* blueberry banana[0m
+[33m[tester::#YH3] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$6\r\nbanana\r\n$3\r\n0-*\r\n$9\r\nblueberry\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#YH3] [client] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
+[33m[tester::#YH3] [client] [0m[36mReceived RESP bulk string: "0-1"[0m
+[33m[tester::#YH3] [client] [0m[92m✔︎ Received "0-1"[0m
+[33m[tester::#YH3] [client] [0m[94m> XADD banana 1-* blueberry banana[0m
+[33m[tester::#YH3] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$6\r\nbanana\r\n$3\r\n1-*\r\n$9\r\nblueberry\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#YH3] [client] [0m[36mReceived bytes: "$3\r\n1-0\r\n"[0m
+[33m[tester::#YH3] [client] [0m[36mReceived RESP bulk string: "1-0"[0m
+[33m[tester::#YH3] [client] [0m[92m✔︎ Received "1-0"[0m
+[33m[tester::#YH3] [client] [0m[94m> XADD banana 1-* banana apple[0m
+[33m[tester::#YH3] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$6\r\nbanana\r\n$3\r\n1-*\r\n$6\r\nbanana\r\n$5\r\napple\r\n"[0m
+[33m[tester::#YH3] [client] [0m[36mReceived bytes: "$3\r\n1-1\r\n"[0m
+[33m[tester::#YH3] [client] [0m[36mReceived RESP bulk string: "1-1"[0m
+[33m[tester::#YH3] [client] [0m[92m✔︎ Received "1-1"[0m
+[33m[tester::#YH3] [0m[92mTest passed.[0m
+[33m[tester::#YH3] [0m[36mTerminating program[0m
+[33m[tester::#YH3] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#XU6] [0m[94mRunning tests for Stage #XU6 (xu6)[0m
+[33m[tester::#XU6] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#XU6] [client] [0m[36mConnected (port 57344 -> port 6379)[0m
+[33m[tester::#XU6] [client] [0m[94m$ redis-cli XADD apple * foo bar[0m
+[33m[tester::#XU6] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\napple\r\n$1\r\n*\r\n$3\r\nfoo\r\n$3\r\nbar\r\n"[0m
+[33m[tester::#XU6] [client] [0m[36mReceived bytes: "$15\r\n1773314496276-0\r\n"[0m
+[33m[tester::#XU6] [client] [0m[36mReceived RESP bulk string: "1773314496276-0"[0m
+[33m[tester::#XU6] [client] [0m[92m✔︎ Received "1773314496276-0"[0m
+[33m[tester::#XU6] [0m[92mThe first part of the ID is a valid unix milliseconds timestamp[0m
+[33m[tester::#XU6] [0m[92mThe second part of the ID is a valid sequence number[0m
+[33m[tester::#XU6] [0m[92mTest passed.[0m
+[33m[tester::#XU6] [0m[36mTerminating program[0m
+[33m[tester::#XU6] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#ZX1] [0m[94mRunning tests for Stage #ZX1 (zx1)[0m
+[33m[tester::#ZX1] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#ZX1] [client] [0m[36mConnected (port 57354 -> port 6379)[0m
+[33m[tester::#ZX1] [client] [0m[94m$ redis-cli XADD mango 0-1 blueberry pineapple[0m
+[33m[tester::#ZX1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\nmango\r\n$3\r\n0-1\r\n$9\r\nblueberry\r\n$9\r\npineapple\r\n"[0m
+[33m[tester::#ZX1] [client] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
+[33m[tester::#ZX1] [client] [0m[36mReceived RESP bulk string: "0-1"[0m
+[33m[tester::#ZX1] [client] [0m[92m✔︎ Received "0-1"[0m
+[33m[tester::#ZX1] [client] [0m[94m> XADD mango 0-2 raspberry orange[0m
+[33m[tester::#ZX1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\nmango\r\n$3\r\n0-2\r\n$9\r\nraspberry\r\n$6\r\norange\r\n"[0m
+[33m[tester::#ZX1] [client] [0m[36mReceived bytes: "$3\r\n0-2\r\n"[0m
+[33m[tester::#ZX1] [client] [0m[36mReceived RESP bulk string: "0-2"[0m
+[33m[tester::#ZX1] [client] [0m[92m✔︎ Received "0-2"[0m
+[33m[tester::#ZX1] [client] [0m[94m> XADD mango 0-3 raspberry banana[0m
+[33m[tester::#ZX1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\nmango\r\n$3\r\n0-3\r\n$9\r\nraspberry\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#ZX1] [client] [0m[36mReceived bytes: "$3\r\n0-3\r\n"[0m
+[33m[tester::#ZX1] [client] [0m[36mReceived RESP bulk string: "0-3"[0m
+[33m[tester::#ZX1] [client] [0m[92m✔︎ Received "0-3"[0m
+[33m[tester::#ZX1] [client] [0m[94m> XRANGE mango 0-2 0-3[0m
+[33m[tester::#ZX1] [client] [0m[36mSent bytes: "*4\r\n$6\r\nXRANGE\r\n$5\r\nmango\r\n$3\r\n0-2\r\n$3\r\n0-3\r\n"[0m
+[33m[tester::#ZX1] [client] [0m[36mReceived bytes: "*2\r\n*2\r\n$3\r\n0-2\r\n*2\r\n$9\r\nraspberry\r\n$6\r\norange\r\n*2\r\n$3\r\n0-3\r\n*2\r\n$9\r\nraspberry\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#ZX1] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#ZX1] [client] [0m[36m  [[0m
+[33m[tester::#ZX1] [client] [0m[36m    "0-2",[0m
+[33m[tester::#ZX1] [client] [0m[36m    ["raspberry", "orange"][0m
+[33m[tester::#ZX1] [client] [0m[36m  ],[0m
+[33m[tester::#ZX1] [client] [0m[36m  [[0m
+[33m[tester::#ZX1] [client] [0m[36m    "0-3",[0m
+[33m[tester::#ZX1] [client] [0m[36m    ["raspberry", "banana"][0m
+[33m[tester::#ZX1] [client] [0m[36m  ][0m
+[33m[tester::#ZX1] [client] [0m[36m][0m
+[33m[tester::#ZX1] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#ZX1] [client] [0m[92m  [[0m
+[33m[tester::#ZX1] [client] [0m[92m    "0-2",[0m
+[33m[tester::#ZX1] [client] [0m[92m    ["raspberry", "orange"][0m
+[33m[tester::#ZX1] [client] [0m[92m  ],[0m
+[33m[tester::#ZX1] [client] [0m[92m  [[0m
+[33m[tester::#ZX1] [client] [0m[92m    "0-3",[0m
+[33m[tester::#ZX1] [client] [0m[92m    ["raspberry", "banana"][0m
+[33m[tester::#ZX1] [client] [0m[92m  ][0m
+[33m[tester::#ZX1] [client] [0m[92m][0m
+[33m[tester::#ZX1] [0m[92mTest passed.[0m
+[33m[tester::#ZX1] [0m[36mTerminating program[0m
+[33m[tester::#ZX1] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#YP1] [0m[94mRunning tests for Stage #YP1 (yp1)[0m
+[33m[tester::#YP1] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#YP1] [client] [0m[36mConnected (port 57362 -> port 6379)[0m
+[33m[tester::#YP1] [client] [0m[94m$ redis-cli XADD apple 0-1 banana pineapple[0m
+[33m[tester::#YP1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\napple\r\n$3\r\n0-1\r\n$6\r\nbanana\r\n$9\r\npineapple\r\n"[0m
+[33m[tester::#YP1] [client] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
+[33m[tester::#YP1] [client] [0m[36mReceived RESP bulk string: "0-1"[0m
+[33m[tester::#YP1] [client] [0m[92m✔︎ Received "0-1"[0m
+[33m[tester::#YP1] [client] [0m[94m> XADD apple 0-2 orange raspberry[0m
+[33m[tester::#YP1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\napple\r\n$3\r\n0-2\r\n$6\r\norange\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#YP1] [client] [0m[36mReceived bytes: "$3\r\n0-2\r\n"[0m
+[33m[tester::#YP1] [client] [0m[36mReceived RESP bulk string: "0-2"[0m
+[33m[tester::#YP1] [client] [0m[92m✔︎ Received "0-2"[0m
+[33m[tester::#YP1] [client] [0m[94m> XADD apple 0-3 apple banana[0m
+[33m[tester::#YP1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\napple\r\n$3\r\n0-3\r\n$5\r\napple\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#YP1] [client] [0m[36mReceived bytes: "$3\r\n0-3\r\n"[0m
+[33m[tester::#YP1] [client] [0m[36mReceived RESP bulk string: "0-3"[0m
+[33m[tester::#YP1] [client] [0m[92m✔︎ Received "0-3"[0m
+[33m[tester::#YP1] [client] [0m[94m> XRANGE apple - 0-3[0m
+[33m[tester::#YP1] [client] [0m[36mSent bytes: "*4\r\n$6\r\nXRANGE\r\n$5\r\napple\r\n$1\r\n-\r\n$3\r\n0-3\r\n"[0m
+[33m[tester::#YP1] [client] [0m[36mReceived bytes: "*3\r\n*2\r\n$3\r\n0-1\r\n*2\r\n$6\r\nbanana\r\n$9\r\npineapple\r\n*2\r\n$3\r\n0-2\r\n*2\r\n$6\r\norange\r\n$9\r\nraspberry\r\n*2\r\n$3\r\n0-3\r\n*2\r\n$5\r\napple\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#YP1] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#YP1] [client] [0m[36m  [[0m
+[33m[tester::#YP1] [client] [0m[36m    "0-1",[0m
+[33m[tester::#YP1] [client] [0m[36m    ["banana", "pineapple"][0m
+[33m[tester::#YP1] [client] [0m[36m  ],[0m
+[33m[tester::#YP1] [client] [0m[36m  [[0m
+[33m[tester::#YP1] [client] [0m[36m    "0-2",[0m
+[33m[tester::#YP1] [client] [0m[36m    ["orange", "raspberry"][0m
+[33m[tester::#YP1] [client] [0m[36m  ],[0m
+[33m[tester::#YP1] [client] [0m[36m  ["0-3", ["apple", "banana"]][0m
+[33m[tester::#YP1] [client] [0m[36m][0m
+[33m[tester::#YP1] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#YP1] [client] [0m[92m  [[0m
+[33m[tester::#YP1] [client] [0m[92m    "0-1",[0m
+[33m[tester::#YP1] [client] [0m[92m    ["banana", "pineapple"][0m
+[33m[tester::#YP1] [client] [0m[92m  ],[0m
+[33m[tester::#YP1] [client] [0m[92m  [[0m
+[33m[tester::#YP1] [client] [0m[92m    "0-2",[0m
+[33m[tester::#YP1] [client] [0m[92m    ["orange", "raspberry"][0m
+[33m[tester::#YP1] [client] [0m[92m  ],[0m
+[33m[tester::#YP1] [client] [0m[92m  ["0-3", ["apple", "banana"]][0m
+[33m[tester::#YP1] [client] [0m[92m][0m
+[33m[tester::#YP1] [0m[92mTest passed.[0m
+[33m[tester::#YP1] [0m[36mTerminating program[0m
+[33m[tester::#YP1] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#FS1] [0m[94mRunning tests for Stage #FS1 (fs1)[0m
+[33m[tester::#FS1] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#FS1] [client] [0m[36mConnected (port 57372 -> port 6379)[0m
+[33m[tester::#FS1] [client] [0m[94m$ redis-cli XADD apple 0-1 orange apple[0m
+[33m[tester::#FS1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\napple\r\n$3\r\n0-1\r\n$6\r\norange\r\n$5\r\napple\r\n"[0m
+[33m[tester::#FS1] [client] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
+[33m[tester::#FS1] [client] [0m[36mReceived RESP bulk string: "0-1"[0m
+[33m[tester::#FS1] [client] [0m[92m✔︎ Received "0-1"[0m
+[33m[tester::#FS1] [client] [0m[94m> XADD apple 0-2 strawberry pineapple[0m
+[33m[tester::#FS1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\napple\r\n$3\r\n0-2\r\n$10\r\nstrawberry\r\n$9\r\npineapple\r\n"[0m
+[33m[tester::#FS1] [client] [0m[36mReceived bytes: "$3\r\n0-2\r\n"[0m
+[33m[tester::#FS1] [client] [0m[36mReceived RESP bulk string: "0-2"[0m
+[33m[tester::#FS1] [client] [0m[92m✔︎ Received "0-2"[0m
+[33m[tester::#FS1] [client] [0m[94m> XADD apple 0-3 orange pineapple[0m
+[33m[tester::#FS1] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\napple\r\n$3\r\n0-3\r\n$6\r\norange\r\n$9\r\npineapple\r\n"[0m
+[33m[tester::#FS1] [client] [0m[36mReceived bytes: "$3\r\n0-3\r\n"[0m
+[33m[tester::#FS1] [client] [0m[36mReceived RESP bulk string: "0-3"[0m
+[33m[tester::#FS1] [client] [0m[92m✔︎ Received "0-3"[0m
+[33m[tester::#FS1] [client] [0m[94m> XRANGE apple 0-2 +[0m
+[33m[tester::#FS1] [client] [0m[36mSent bytes: "*4\r\n$6\r\nXRANGE\r\n$5\r\napple\r\n$3\r\n0-2\r\n$1\r\n+\r\n"[0m
+[33m[tester::#FS1] [client] [0m[36mReceived bytes: "*2\r\n*2\r\n$3\r\n0-2\r\n*2\r\n$10\r\nstrawberry\r\n$9\r\npineapple\r\n*2\r\n$3\r\n0-3\r\n*2\r\n$6\r\norange\r\n$9\r\npineapple\r\n"[0m
+[33m[tester::#FS1] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#FS1] [client] [0m[36m  [[0m
+[33m[tester::#FS1] [client] [0m[36m    "0-2",[0m
+[33m[tester::#FS1] [client] [0m[36m    ["strawberry", "pineapple"][0m
+[33m[tester::#FS1] [client] [0m[36m  ],[0m
+[33m[tester::#FS1] [client] [0m[36m  [[0m
+[33m[tester::#FS1] [client] [0m[36m    "0-3",[0m
+[33m[tester::#FS1] [client] [0m[36m    ["orange", "pineapple"][0m
+[33m[tester::#FS1] [client] [0m[36m  ][0m
+[33m[tester::#FS1] [client] [0m[36m][0m
+[33m[tester::#FS1] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#FS1] [client] [0m[92m  [[0m
+[33m[tester::#FS1] [client] [0m[92m    "0-2",[0m
+[33m[tester::#FS1] [client] [0m[92m    ["strawberry", "pineapple"][0m
+[33m[tester::#FS1] [client] [0m[92m  ],[0m
+[33m[tester::#FS1] [client] [0m[92m  [[0m
+[33m[tester::#FS1] [client] [0m[92m    "0-3",[0m
+[33m[tester::#FS1] [client] [0m[92m    ["orange", "pineapple"][0m
+[33m[tester::#FS1] [client] [0m[92m  ][0m
+[33m[tester::#FS1] [client] [0m[92m][0m
+[33m[tester::#FS1] [0m[92mTest passed.[0m
+[33m[tester::#FS1] [0m[36mTerminating program[0m
+[33m[tester::#FS1] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#UM0] [0m[94mRunning tests for Stage #UM0 (um0)[0m
+[33m[tester::#UM0] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#UM0] [client] [0m[36mConnected (port 57388 -> port 6379)[0m
+[33m[tester::#UM0] [client] [0m[94m$ redis-cli XADD pear 0-1 temperature 20[0m
+[33m[tester::#UM0] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$4\r\npear\r\n$3\r\n0-1\r\n$11\r\ntemperature\r\n$2\r\n20\r\n"[0m
+[33m[tester::#UM0] [client] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
+[33m[tester::#UM0] [client] [0m[36mReceived RESP bulk string: "0-1"[0m
+[33m[tester::#UM0] [client] [0m[92m✔︎ Received "0-1"[0m
+[33m[tester::#UM0] [client] [0m[94m> XREAD streams pear 0-0[0m
+[33m[tester::#UM0] [client] [0m[36mSent bytes: "*4\r\n$5\r\nXREAD\r\n$7\r\nstreams\r\n$4\r\npear\r\n$3\r\n0-0\r\n"[0m
+[33m[tester::#UM0] [client] [0m[36mReceived bytes: "*1\r\n*2\r\n$4\r\npear\r\n*1\r\n*2\r\n$3\r\n0-1\r\n*2\r\n$11\r\ntemperature\r\n$2\r\n20\r\n"[0m
+[33m[tester::#UM0] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#UM0] [client] [0m[36m  [[0m
+[33m[tester::#UM0] [client] [0m[36m    "pear",[0m
+[33m[tester::#UM0] [client] [0m[36m    [[0m
+[33m[tester::#UM0] [client] [0m[36m      [[0m
+[33m[tester::#UM0] [client] [0m[36m        "0-1",[0m
+[33m[tester::#UM0] [client] [0m[36m        ["temperature", "20"][0m
+[33m[tester::#UM0] [client] [0m[36m      ][0m
+[33m[tester::#UM0] [client] [0m[36m    ][0m
+[33m[tester::#UM0] [client] [0m[36m  ][0m
+[33m[tester::#UM0] [client] [0m[36m][0m
+[33m[tester::#UM0] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#UM0] [client] [0m[92m  [[0m
+[33m[tester::#UM0] [client] [0m[92m    "pear",[0m
+[33m[tester::#UM0] [client] [0m[92m    [[0m
+[33m[tester::#UM0] [client] [0m[92m      [[0m
+[33m[tester::#UM0] [client] [0m[92m        "0-1",[0m
+[33m[tester::#UM0] [client] [0m[92m        ["temperature", "20"][0m
+[33m[tester::#UM0] [client] [0m[92m      ][0m
+[33m[tester::#UM0] [client] [0m[92m    ][0m
+[33m[tester::#UM0] [client] [0m[92m  ][0m
+[33m[tester::#UM0] [client] [0m[92m][0m
+[33m[tester::#UM0] [0m[92mTest passed.[0m
+[33m[tester::#UM0] [0m[36mTerminating program[0m
+[33m[tester::#UM0] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#RU9] [0m[94mRunning tests for Stage #RU9 (ru9)[0m
+[33m[tester::#RU9] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#RU9] [client] [0m[36mConnected (port 57398 -> port 6379)[0m
+[33m[tester::#RU9] [client] [0m[94m$ redis-cli XADD strawberry 0-1 temperature 0[0m
+[33m[tester::#RU9] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$10\r\nstrawberry\r\n$3\r\n0-1\r\n$11\r\ntemperature\r\n$1\r\n0\r\n"[0m
+[33m[tester::#RU9] [client] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
+[33m[tester::#RU9] [client] [0m[36mReceived RESP bulk string: "0-1"[0m
+[33m[tester::#RU9] [client] [0m[92m✔︎ Received "0-1"[0m
+[33m[tester::#RU9] [client] [0m[94m> XADD pear 0-2 humidity 1[0m
+[33m[tester::#RU9] [client] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$4\r\npear\r\n$3\r\n0-2\r\n$8\r\nhumidity\r\n$1\r\n1\r\n"[0m
+[33m[tester::#RU9] [client] [0m[36mReceived bytes: "$3\r\n0-2\r\n"[0m
+[33m[tester::#RU9] [client] [0m[36mReceived RESP bulk string: "0-2"[0m
+[33m[tester::#RU9] [client] [0m[92m✔︎ Received "0-2"[0m
+[33m[tester::#RU9] [client] [0m[94m> XREAD streams strawberry pear 0-0 0-1[0m
+[33m[tester::#RU9] [client] [0m[36mSent bytes: "*6\r\n$5\r\nXREAD\r\n$7\r\nstreams\r\n$10\r\nstrawberry\r\n$4\r\npear\r\n$3\r\n0-0\r\n$3\r\n0-1\r\n"[0m
+[33m[tester::#RU9] [client] [0m[36mReceived bytes: "*2\r\n*2\r\n$10\r\nstrawberry\r\n*1\r\n*2\r\n$3\r\n0-1\r\n*2\r\n$11\r\ntemperature\r\n$1\r\n0\r\n*2\r\n$4\r\npear\r\n*1\r\n*2\r\n$3\r\n0-2\r\n*2\r\n$8\r\nhumidity\r\n$1\r\n1\r\n"[0m
+[33m[tester::#RU9] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#RU9] [client] [0m[36m  [[0m
+[33m[tester::#RU9] [client] [0m[36m    "strawberry",[0m
+[33m[tester::#RU9] [client] [0m[36m    [[0m
+[33m[tester::#RU9] [client] [0m[36m      [[0m
+[33m[tester::#RU9] [client] [0m[36m        "0-1",[0m
+[33m[tester::#RU9] [client] [0m[36m        ["temperature", "0"][0m
+[33m[tester::#RU9] [client] [0m[36m      ][0m
+[33m[tester::#RU9] [client] [0m[36m    ][0m
+[33m[tester::#RU9] [client] [0m[36m  ],[0m
+[33m[tester::#RU9] [client] [0m[36m  [[0m
+[33m[tester::#RU9] [client] [0m[36m    "pear",[0m
+[33m[tester::#RU9] [client] [0m[36m    [["0-2", ["humidity", "1"]]][0m
+[33m[tester::#RU9] [client] [0m[36m  ][0m
+[33m[tester::#RU9] [client] [0m[36m][0m
+[33m[tester::#RU9] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#RU9] [client] [0m[92m  [[0m
+[33m[tester::#RU9] [client] [0m[92m    "strawberry",[0m
+[33m[tester::#RU9] [client] [0m[92m    [[0m
+[33m[tester::#RU9] [client] [0m[92m      [[0m
+[33m[tester::#RU9] [client] [0m[92m        "0-1",[0m
+[33m[tester::#RU9] [client] [0m[92m        ["temperature", "0"][0m
+[33m[tester::#RU9] [client] [0m[92m      ][0m
+[33m[tester::#RU9] [client] [0m[92m    ][0m
+[33m[tester::#RU9] [client] [0m[92m  ],[0m
+[33m[tester::#RU9] [client] [0m[92m  [[0m
+[33m[tester::#RU9] [client] [0m[92m    "pear",[0m
+[33m[tester::#RU9] [client] [0m[92m    [["0-2", ["humidity", "1"]]][0m
+[33m[tester::#RU9] [client] [0m[92m  ][0m
+[33m[tester::#RU9] [client] [0m[92m][0m
+[33m[tester::#RU9] [0m[92mTest passed.[0m
+[33m[tester::#RU9] [0m[36mTerminating program[0m
+[33m[tester::#RU9] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#BS1] [0m[94mRunning tests for Stage #BS1 (bs1)[0m
+[33m[tester::#BS1] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#BS1] [client-1] [0m[36mConnected (port 57416 -> port 6379)[0m
+[33m[tester::#BS1] [client-1] [0m[94m$ redis-cli XADD grape 0-1 temperature 68[0m
+[33m[tester::#BS1] [client-1] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\ngrape\r\n$3\r\n0-1\r\n$11\r\ntemperature\r\n$2\r\n68\r\n"[0m
+[33m[tester::#BS1] [client-1] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
+[33m[tester::#BS1] [client-1] [0m[36mReceived RESP bulk string: "0-1"[0m
+[33m[tester::#BS1] [client-1] [0m[92m✔︎ Received "0-1"[0m
+[33m[tester::#BS1] [client-1] [0m[94m> XREAD block 1000 streams grape 0-1[0m
+[33m[tester::#BS1] [client-1] [0m[36mSent bytes: "*6\r\n$5\r\nXREAD\r\n$5\r\nblock\r\n$4\r\n1000\r\n$7\r\nstreams\r\n$5\r\ngrape\r\n$3\r\n0-1\r\n"[0m
+[33m[tester::#BS1] [client-1] [0m[94mWaiting for 500 ms[0m
+[33m[tester::#BS1] [client-2] [0m[36mConnected (port 57418 -> port 6379)[0m
+[33m[tester::#BS1] [client-2] [0m[94m$ redis-cli XADD grape 0-2 temperature 14[0m
+[33m[tester::#BS1] [client-2] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$5\r\ngrape\r\n$3\r\n0-2\r\n$11\r\ntemperature\r\n$2\r\n14\r\n"[0m
+[33m[tester::#BS1] [client-2] [0m[36mReceived bytes: "$3\r\n0-2\r\n"[0m
+[33m[tester::#BS1] [client-2] [0m[36mReceived RESP bulk string: "0-2"[0m
+[33m[tester::#BS1] [client-2] [0m[92m✔︎ Received "0-2"[0m
+[33m[tester::#BS1] [0m[94mExpecting 1 client to receive response of XREAD command[0m
+[33m[tester::#BS1] [client-1] [0m[36mReceived bytes: "*1\r\n*2\r\n$5\r\ngrape\r\n*1\r\n*2\r\n$3\r\n0-2\r\n*2\r\n$11\r\ntemperature\r\n$2\r\n14\r\n"[0m
+[33m[tester::#BS1] [client-1] [0m[36mReceived RESP array: [[0m
+[33m[tester::#BS1] [client-1] [0m[36m  [[0m
+[33m[tester::#BS1] [client-1] [0m[36m    "grape",[0m
+[33m[tester::#BS1] [client-1] [0m[36m    [[0m
+[33m[tester::#BS1] [client-1] [0m[36m      [[0m
+[33m[tester::#BS1] [client-1] [0m[36m        "0-2",[0m
+[33m[tester::#BS1] [client-1] [0m[36m        ["temperature", "14"][0m
+[33m[tester::#BS1] [client-1] [0m[36m      ][0m
+[33m[tester::#BS1] [client-1] [0m[36m    ][0m
+[33m[tester::#BS1] [client-1] [0m[36m  ][0m
+[33m[tester::#BS1] [client-1] [0m[36m][0m
+[33m[tester::#BS1] [client-1] [0m[92m✔︎ Received [[0m
+[33m[tester::#BS1] [client-1] [0m[92m  [[0m
+[33m[tester::#BS1] [client-1] [0m[92m    "grape",[0m
+[33m[tester::#BS1] [client-1] [0m[92m    [[0m
+[33m[tester::#BS1] [client-1] [0m[92m      [[0m
+[33m[tester::#BS1] [client-1] [0m[92m        "0-2",[0m
+[33m[tester::#BS1] [client-1] [0m[92m        ["temperature", "14"][0m
+[33m[tester::#BS1] [client-1] [0m[92m      ][0m
+[33m[tester::#BS1] [client-1] [0m[92m    ][0m
+[33m[tester::#BS1] [client-1] [0m[92m  ][0m
+[33m[tester::#BS1] [client-1] [0m[92m][0m
+[33m[tester::#BS1] [client-1] [0m[94m> XREAD block 1000 streams grape 0-2[0m
+[33m[tester::#BS1] [client-1] [0m[36mSent bytes: "*6\r\n$5\r\nXREAD\r\n$5\r\nblock\r\n$4\r\n1000\r\n$7\r\nstreams\r\n$5\r\ngrape\r\n$3\r\n0-2\r\n"[0m
+[33m[tester::#BS1] [client-1] [0m[36mReceived bytes: "*-1\r\n"[0m
+[33m[tester::#BS1] [client-1] [0m[36mReceived RESP null array: "*-1\r\n"[0m
+[33m[tester::#BS1] [client-1] [0m[92m✔︎ Received "*-1\r\n"[0m
+[33m[tester::#BS1] [0m[92mTest passed.[0m
+[33m[tester::#BS1] [0m[36mTerminating program[0m
+[33m[tester::#BS1] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#HW1] [0m[94mRunning tests for Stage #HW1 (hw1)[0m
+[33m[tester::#HW1] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#HW1] [client-1] [0m[36mConnected (port 57432 -> port 6379)[0m
+[33m[tester::#HW1] [client-1] [0m[94m$ redis-cli XADD pear 0-1 temperature 94[0m
+[33m[tester::#HW1] [client-1] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$4\r\npear\r\n$3\r\n0-1\r\n$11\r\ntemperature\r\n$2\r\n94\r\n"[0m
+[33m[tester::#HW1] [client-1] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
+[33m[tester::#HW1] [client-1] [0m[36mReceived RESP bulk string: "0-1"[0m
+[33m[tester::#HW1] [client-1] [0m[92m✔︎ Received "0-1"[0m
+[33m[tester::#HW1] [client-1] [0m[94m> XREAD block 0 streams pear 0-1[0m
+[33m[tester::#HW1] [client-1] [0m[36mSent bytes: "*6\r\n$5\r\nXREAD\r\n$5\r\nblock\r\n$1\r\n0\r\n$7\r\nstreams\r\n$4\r\npear\r\n$3\r\n0-1\r\n"[0m
+[33m[tester::#HW1] [client-2] [0m[36mConnected (port 57438 -> port 6379)[0m
+[33m[tester::#HW1] [client-2] [0m[94m$ redis-cli XADD pear 0-2 temperature 41[0m
+[33m[tester::#HW1] [client-2] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$4\r\npear\r\n$3\r\n0-2\r\n$11\r\ntemperature\r\n$2\r\n41\r\n"[0m
+[33m[tester::#HW1] [client-2] [0m[36mReceived bytes: "$3\r\n0-2\r\n"[0m
+[33m[tester::#HW1] [client-2] [0m[36mReceived RESP bulk string: "0-2"[0m
+[33m[tester::#HW1] [client-2] [0m[92m✔︎ Received "0-2"[0m
+[33m[tester::#HW1] [0m[94mExpecting 1 client to receive response of XREAD command[0m
+[33m[tester::#HW1] [client-1] [0m[36mReceived bytes: "*1\r\n*2\r\n$4\r\npear\r\n*1\r\n*2\r\n$3\r\n0-2\r\n*2\r\n$11\r\ntemperature\r\n$2\r\n41\r\n"[0m
+[33m[tester::#HW1] [client-1] [0m[36mReceived RESP array: [[0m
+[33m[tester::#HW1] [client-1] [0m[36m  [[0m
+[33m[tester::#HW1] [client-1] [0m[36m    "pear",[0m
+[33m[tester::#HW1] [client-1] [0m[36m    [[0m
+[33m[tester::#HW1] [client-1] [0m[36m      [[0m
+[33m[tester::#HW1] [client-1] [0m[36m        "0-2",[0m
+[33m[tester::#HW1] [client-1] [0m[36m        ["temperature", "41"][0m
+[33m[tester::#HW1] [client-1] [0m[36m      ][0m
+[33m[tester::#HW1] [client-1] [0m[36m    ][0m
+[33m[tester::#HW1] [client-1] [0m[36m  ][0m
+[33m[tester::#HW1] [client-1] [0m[36m][0m
+[33m[tester::#HW1] [client-1] [0m[92m✔︎ Received [[0m
+[33m[tester::#HW1] [client-1] [0m[92m  [[0m
+[33m[tester::#HW1] [client-1] [0m[92m    "pear",[0m
+[33m[tester::#HW1] [client-1] [0m[92m    [[0m
+[33m[tester::#HW1] [client-1] [0m[92m      [[0m
+[33m[tester::#HW1] [client-1] [0m[92m        "0-2",[0m
+[33m[tester::#HW1] [client-1] [0m[92m        ["temperature", "41"][0m
+[33m[tester::#HW1] [client-1] [0m[92m      ][0m
+[33m[tester::#HW1] [client-1] [0m[92m    ][0m
+[33m[tester::#HW1] [client-1] [0m[92m  ][0m
+[33m[tester::#HW1] [client-1] [0m[92m][0m
+[33m[tester::#HW1] [0m[92mTest passed.[0m
+[33m[tester::#HW1] [0m[36mTerminating program[0m
+[33m[tester::#HW1] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#XU1] [0m[94mRunning tests for Stage #XU1 (xu1)[0m
+[33m[tester::#XU1] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#XU1] [client-1] [0m[36mConnected (port 57470 -> port 6379)[0m
+[33m[tester::#XU1] [client-1] [0m[94m$ redis-cli XADD strawberry 0-1 temperature 41[0m
+[33m[tester::#XU1] [client-1] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$10\r\nstrawberry\r\n$3\r\n0-1\r\n$11\r\ntemperature\r\n$2\r\n41\r\n"[0m
+[33m[tester::#XU1] [client-1] [0m[36mReceived bytes: "$3\r\n0-1\r\n"[0m
+[33m[tester::#XU1] [client-1] [0m[36mReceived RESP bulk string: "0-1"[0m
+[33m[tester::#XU1] [client-1] [0m[92m✔︎ Received "0-1"[0m
+[33m[tester::#XU1] [client-1] [0m[94m> XREAD block 0 streams strawberry $[0m
+[33m[tester::#XU1] [client-1] [0m[36mSent bytes: "*6\r\n$5\r\nXREAD\r\n$5\r\nblock\r\n$1\r\n0\r\n$7\r\nstreams\r\n$10\r\nstrawberry\r\n$1\r\n$\r\n"[0m
+[33m[tester::#XU1] [client-1] [0m[94mSleeping for 1000 ms[0m
+[33m[tester::#XU1] [client-2] [0m[36mConnected (port 52718 -> port 6379)[0m
+[33m[tester::#XU1] [client-2] [0m[94m$ redis-cli XADD strawberry 0-2 temperature 70[0m
+[33m[tester::#XU1] [client-2] [0m[36mSent bytes: "*5\r\n$4\r\nXADD\r\n$10\r\nstrawberry\r\n$3\r\n0-2\r\n$11\r\ntemperature\r\n$2\r\n70\r\n"[0m
+[33m[tester::#XU1] [client-2] [0m[36mReceived bytes: "$3\r\n0-2\r\n"[0m
+[33m[tester::#XU1] [client-2] [0m[36mReceived RESP bulk string: "0-2"[0m
+[33m[tester::#XU1] [client-2] [0m[92m✔︎ Received "0-2"[0m
+[33m[tester::#XU1] [0m[94mExpecting 1 client to receive response of XREAD command[0m
+[33m[tester::#XU1] [client-1] [0m[36mReceived bytes: "*1\r\n*2\r\n$10\r\nstrawberry\r\n*1\r\n*2\r\n$3\r\n0-2\r\n*2\r\n$11\r\ntemperature\r\n$2\r\n70\r\n"[0m
+[33m[tester::#XU1] [client-1] [0m[36mReceived RESP array: [[0m
+[33m[tester::#XU1] [client-1] [0m[36m  [[0m
+[33m[tester::#XU1] [client-1] [0m[36m    "strawberry",[0m
+[33m[tester::#XU1] [client-1] [0m[36m    [[0m
+[33m[tester::#XU1] [client-1] [0m[36m      [[0m
+[33m[tester::#XU1] [client-1] [0m[36m        "0-2",[0m
+[33m[tester::#XU1] [client-1] [0m[36m        ["temperature", "70"][0m
+[33m[tester::#XU1] [client-1] [0m[36m      ][0m
+[33m[tester::#XU1] [client-1] [0m[36m    ][0m
+[33m[tester::#XU1] [client-1] [0m[36m  ][0m
+[33m[tester::#XU1] [client-1] [0m[36m][0m
+[33m[tester::#XU1] [client-1] [0m[92m✔︎ Received [[0m
+[33m[tester::#XU1] [client-1] [0m[92m  [[0m
+[33m[tester::#XU1] [client-1] [0m[92m    "strawberry",[0m
+[33m[tester::#XU1] [client-1] [0m[92m    [[0m
+[33m[tester::#XU1] [client-1] [0m[92m      [[0m
+[33m[tester::#XU1] [client-1] [0m[92m        "0-2",[0m
+[33m[tester::#XU1] [client-1] [0m[92m        ["temperature", "70"][0m
+[33m[tester::#XU1] [client-1] [0m[92m      ][0m
+[33m[tester::#XU1] [client-1] [0m[92m    ][0m
+[33m[tester::#XU1] [client-1] [0m[92m  ][0m
+[33m[tester::#XU1] [client-1] [0m[92m][0m
+[33m[tester::#XU1] [client-1] [0m[94m> XREAD block 1000 streams strawberry $[0m
+[33m[tester::#XU1] [client-1] [0m[36mSent bytes: "*6\r\n$5\r\nXREAD\r\n$5\r\nblock\r\n$4\r\n1000\r\n$7\r\nstreams\r\n$10\r\nstrawberry\r\n$1\r\n$\r\n"[0m
+[33m[tester::#XU1] [client-1] [0m[36mReceived bytes: "*-1\r\n"[0m
+[33m[tester::#XU1] [client-1] [0m[36mReceived RESP null array: "*-1\r\n"[0m
+[33m[tester::#XU1] [client-1] [0m[92m✔︎ Received "*-1\r\n"[0m
+[33m[tester::#XU1] [0m[92mTest passed.[0m
+[33m[tester::#XU1] [0m[36mTerminating program[0m
+[33m[tester::#XU1] [0m[36mProgram terminated successfully[0m

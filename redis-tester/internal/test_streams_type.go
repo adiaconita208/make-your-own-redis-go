@@ -1,0 +1,52 @@
+package internal
+
+import (
+	"fmt"
+
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+
+	"github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
+)
+
+func testStreamsType(stageHarness *test_case_harness.TestCaseHarness) error {
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	if err := b.Run(); err != nil {
+		return err
+	}
+
+	logger := stageHarness.Logger
+
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+	client, err := clientsSpawner.SpawnClientWithPrefix("client")
+	if err != nil {
+		return err
+	}
+
+	key := random.RandomWord()
+	value := random.RandomWord()
+
+	multiCommandTestCase := test_cases.MultiCommandTestCase{
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   []string{"SET", key, value},
+				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
+			},
+			{
+				Command:   []string{"TYPE", key},
+				Assertion: resp_assertions.NewSimpleStringAssertion("string"),
+			},
+			{
+				Command:   []string{"TYPE", fmt.Sprintf("missing_key_%s", value)},
+				Assertion: resp_assertions.NewSimpleStringAssertion("none"),
+			},
+		},
+	}
+
+	return multiCommandTestCase.RunAll(client, logger)
+}

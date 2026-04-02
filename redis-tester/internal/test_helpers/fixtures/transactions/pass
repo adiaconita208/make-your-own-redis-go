@@ -1,0 +1,390 @@
+Debug = true
+
+[33m[tester::#SI4] [0m[94mRunning tests for Stage #SI4 (si4)[0m
+[33m[tester::#SI4] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#SI4] [client] [0m[36mConnected (port 47684 -> port 6379)[0m
+[33m[tester::#SI4] [client] [0m[94m$ redis-cli SET orange 28[0m
+[33m[tester::#SI4] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\norange\r\n$2\r\n28\r\n"[0m
+[33m[tester::#SI4] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#SI4] [client] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#SI4] [client] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#SI4] [client] [0m[94m> INCR orange[0m
+[33m[tester::#SI4] [client] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$6\r\norange\r\n"[0m
+[33m[tester::#SI4] [client] [0m[36mReceived bytes: ":29\r\n"[0m
+[33m[tester::#SI4] [client] [0m[36mReceived RESP integer: 29[0m
+[33m[tester::#SI4] [client] [0m[92m✔︎ Received 29[0m
+[33m[tester::#SI4] [0m[92mTest passed.[0m
+[33m[tester::#SI4] [0m[36mTerminating program[0m
+[33m[tester::#SI4] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#LZ8] [0m[94mRunning tests for Stage #LZ8 (lz8)[0m
+[33m[tester::#LZ8] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#LZ8] [client] [0m[36mConnected (port 47688 -> port 6379)[0m
+[33m[tester::#LZ8] [client] [0m[94m$ redis-cli INCR raspberry[0m
+[33m[tester::#LZ8] [client] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#LZ8] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#LZ8] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#LZ8] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#LZ8] [client] [0m[94m> INCR raspberry[0m
+[33m[tester::#LZ8] [client] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#LZ8] [client] [0m[36mReceived bytes: ":2\r\n"[0m
+[33m[tester::#LZ8] [client] [0m[36mReceived RESP integer: 2[0m
+[33m[tester::#LZ8] [client] [0m[92m✔︎ Received 2[0m
+[33m[tester::#LZ8] [client] [0m[94m> GET raspberry[0m
+[33m[tester::#LZ8] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#LZ8] [client] [0m[36mReceived bytes: "$1\r\n2\r\n"[0m
+[33m[tester::#LZ8] [client] [0m[36mReceived RESP bulk string: "2"[0m
+[33m[tester::#LZ8] [client] [0m[92m✔︎ Received "2"[0m
+[33m[tester::#LZ8] [0m[92mTest passed.[0m
+[33m[tester::#LZ8] [0m[36mTerminating program[0m
+[33m[tester::#LZ8] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#MK1] [0m[94mRunning tests for Stage #MK1 (mk1)[0m
+[33m[tester::#MK1] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#MK1] [client] [0m[36mConnected (port 47692 -> port 6379)[0m
+[33m[tester::#MK1] [client] [0m[94m$ redis-cli SET blueberry mango[0m
+[33m[tester::#MK1] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#MK1] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#MK1] [client] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#MK1] [client] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#MK1] [client] [0m[94m> INCR blueberry[0m
+[33m[tester::#MK1] [client] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#MK1] [client] [0m[36mReceived bytes: "-ERR value is not an integer or out of range\r\n"[0m
+[33m[tester::#MK1] [client] [0m[36mReceived RESP error: "ERR value is not an integer or out of range"[0m
+[33m[tester::#MK1] [client] [0m[92m✔︎ Received "ERR value is not an integer or out of range"[0m
+[33m[tester::#MK1] [0m[92mTest passed.[0m
+[33m[tester::#MK1] [0m[36mTerminating program[0m
+[33m[tester::#MK1] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#PN0] [0m[94mRunning tests for Stage #PN0 (pn0)[0m
+[33m[tester::#PN0] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#PN0] [client] [0m[36mConnected (port 47698 -> port 6379)[0m
+[33m[tester::#PN0] [client] [0m[94m$ redis-cli MULTI[0m
+[33m[tester::#PN0] [client] [0m[36mSent bytes: "*1\r\n$5\r\nMULTI\r\n"[0m
+[33m[tester::#PN0] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#PN0] [client] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#PN0] [client] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#PN0] [0m[92mTest passed.[0m
+[33m[tester::#PN0] [0m[36mTerminating program[0m
+[33m[tester::#PN0] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#LO4] [0m[94mRunning tests for Stage #LO4 (lo4)[0m
+[33m[tester::#LO4] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#LO4] [client] [0m[36mConnected (port 47718 -> port 6379)[0m
+[33m[tester::#LO4] [client] [0m[94m$ redis-cli EXEC[0m
+[33m[tester::#LO4] [client] [0m[36mSent bytes: "*1\r\n$4\r\nEXEC\r\n"[0m
+[33m[tester::#LO4] [client] [0m[36mReceived bytes: "-ERR EXEC without MULTI\r\n"[0m
+[33m[tester::#LO4] [client] [0m[36mReceived RESP error: "ERR EXEC without MULTI"[0m
+[33m[tester::#LO4] [client] [0m[92m✔︎ Received "ERR EXEC without MULTI"[0m
+[33m[tester::#LO4] [0m[92mTest passed.[0m
+[33m[tester::#LO4] [0m[36mTerminating program[0m
+[33m[tester::#LO4] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#WE1] [0m[94mRunning tests for Stage #WE1 (we1)[0m
+[33m[tester::#WE1] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#WE1] [client] [0m[36mConnected (port 47742 -> port 6379)[0m
+[33m[tester::#WE1] [client] [0m[94m$ redis-cli MULTI[0m
+[33m[tester::#WE1] [client] [0m[36mSent bytes: "*1\r\n$5\r\nMULTI\r\n"[0m
+[33m[tester::#WE1] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#WE1] [client] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#WE1] [client] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#WE1] [client] [0m[94m> EXEC[0m
+[33m[tester::#WE1] [client] [0m[36mSent bytes: "*1\r\n$4\r\nEXEC\r\n"[0m
+[33m[tester::#WE1] [client] [0m[36mReceived bytes: "*0\r\n"[0m
+[33m[tester::#WE1] [client] [0m[36mReceived RESP array: [][0m
+[33m[tester::#WE1] [client] [0m[92m✔︎ Received [][0m
+[33m[tester::#WE1] [client] [0m[94m> EXEC[0m
+[33m[tester::#WE1] [client] [0m[36mSent bytes: "*1\r\n$4\r\nEXEC\r\n"[0m
+[33m[tester::#WE1] [client] [0m[36mReceived bytes: "-ERR EXEC without MULTI\r\n"[0m
+[33m[tester::#WE1] [client] [0m[36mReceived RESP error: "ERR EXEC without MULTI"[0m
+[33m[tester::#WE1] [client] [0m[92m✔︎ Received "ERR EXEC without MULTI"[0m
+[33m[tester::#WE1] [0m[92mTest passed.[0m
+[33m[tester::#WE1] [0m[36mTerminating program[0m
+[33m[tester::#WE1] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#RS9] [0m[94mRunning tests for Stage #RS9 (rs9)[0m
+[33m[tester::#RS9] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#RS9] [client-1] [0m[36mConnected (port 47750 -> port 6379)[0m
+[33m[tester::#RS9] [client-2] [0m[36mConnected (port 47766 -> port 6379)[0m
+[33m[tester::#RS9] [client-1] [0m[94m$ redis-cli MULTI[0m
+[33m[tester::#RS9] [client-1] [0m[36mSent bytes: "*1\r\n$5\r\nMULTI\r\n"[0m
+[33m[tester::#RS9] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#RS9] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#RS9] [client-1] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#RS9] [0m[36mSending command: 1/2[0m
+[33m[tester::#RS9] [client-1] [0m[94m> SET apple 16[0m
+[33m[tester::#RS9] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$5\r\napple\r\n$2\r\n16\r\n"[0m
+[33m[tester::#RS9] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#RS9] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#RS9] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#RS9] [0m[36mSending command: 2/2[0m
+[33m[tester::#RS9] [client-1] [0m[94m> INCR apple[0m
+[33m[tester::#RS9] [client-1] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$5\r\napple\r\n"[0m
+[33m[tester::#RS9] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#RS9] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#RS9] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#RS9] [client-2] [0m[94m$ redis-cli GET apple[0m
+[33m[tester::#RS9] [client-2] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\napple\r\n"[0m
+[33m[tester::#RS9] [client-2] [0m[36mReceived bytes: "$-1\r\n"[0m
+[33m[tester::#RS9] [client-2] [0m[36mReceived RESP null bulk string: "$-1\r\n"[0m
+[33m[tester::#RS9] [client-2] [0m[92m✔︎ Received "$-1\r\n"[0m
+[33m[tester::#RS9] [0m[92mTest passed.[0m
+[33m[tester::#RS9] [0m[36mTerminating program[0m
+[33m[tester::#RS9] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#FY6] [0m[94mRunning tests for Stage #FY6 (fy6)[0m
+[33m[tester::#FY6] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#FY6] [client-1] [0m[36mConnected (port 47778 -> port 6379)[0m
+[33m[tester::#FY6] [client-2] [0m[36mConnected (port 47780 -> port 6379)[0m
+[33m[tester::#FY6] [client-1] [0m[94m$ redis-cli MULTI[0m
+[33m[tester::#FY6] [client-1] [0m[36mSent bytes: "*1\r\n$5\r\nMULTI\r\n"[0m
+[33m[tester::#FY6] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#FY6] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#FY6] [client-1] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#FY6] [0m[36mSending command: 1/4[0m
+[33m[tester::#FY6] [client-1] [0m[94m> SET blueberry 92[0m
+[33m[tester::#FY6] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nblueberry\r\n$2\r\n92\r\n"[0m
+[33m[tester::#FY6] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#FY6] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#FY6] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#FY6] [0m[36mSending command: 2/4[0m
+[33m[tester::#FY6] [client-1] [0m[94m> INCR blueberry[0m
+[33m[tester::#FY6] [client-1] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#FY6] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#FY6] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#FY6] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#FY6] [0m[36mSending command: 3/4[0m
+[33m[tester::#FY6] [client-1] [0m[94m> INCR banana[0m
+[33m[tester::#FY6] [client-1] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#FY6] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#FY6] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#FY6] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#FY6] [0m[36mSending command: 4/4[0m
+[33m[tester::#FY6] [client-1] [0m[94m> GET banana[0m
+[33m[tester::#FY6] [client-1] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#FY6] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#FY6] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#FY6] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#FY6] [client-1] [0m[94m> EXEC[0m
+[33m[tester::#FY6] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nEXEC\r\n"[0m
+[33m[tester::#FY6] [client-1] [0m[36mReceived bytes: "*4\r\n+OK\r\n:93\r\n:1\r\n$1\r\n1\r\n"[0m
+[33m[tester::#FY6] [client-1] [0m[36mReceived RESP array: ["OK", 93, 1, "1"][0m
+[33m[tester::#FY6] [client-1] [0m[92m✔︎ Received ["OK", 93, 1, "1"][0m
+[33m[tester::#FY6] [client-2] [0m[94m$ redis-cli GET blueberry[0m
+[33m[tester::#FY6] [client-2] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#FY6] [client-2] [0m[36mReceived bytes: "$2\r\n93\r\n"[0m
+[33m[tester::#FY6] [client-2] [0m[36mReceived RESP bulk string: "93"[0m
+[33m[tester::#FY6] [client-2] [0m[92m✔︎ Received "93"[0m
+[33m[tester::#FY6] [0m[92mTest passed.[0m
+[33m[tester::#FY6] [0m[36mTerminating program[0m
+[33m[tester::#FY6] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#RL9] [0m[94mRunning tests for Stage #RL9 (rl9)[0m
+[33m[tester::#RL9] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#RL9] [client] [0m[36mConnected (port 47796 -> port 6379)[0m
+[33m[tester::#RL9] [client] [0m[94m$ redis-cli SET banana 7[0m
+[33m[tester::#RL9] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\nbanana\r\n$1\r\n7\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#RL9] [client] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#RL9] [client] [0m[94m> MULTI[0m
+[33m[tester::#RL9] [client] [0m[36mSent bytes: "*1\r\n$5\r\nMULTI\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#RL9] [client] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#RL9] [0m[36mSending command: 1/2[0m
+[33m[tester::#RL9] [client] [0m[94m> SET pear 87[0m
+[33m[tester::#RL9] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$4\r\npear\r\n$2\r\n87\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#RL9] [client] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#RL9] [0m[36mSending command: 2/2[0m
+[33m[tester::#RL9] [client] [0m[94m> INCR pear[0m
+[33m[tester::#RL9] [client] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$4\r\npear\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#RL9] [client] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#RL9] [client] [0m[94m> DISCARD[0m
+[33m[tester::#RL9] [client] [0m[36mSent bytes: "*1\r\n$7\r\nDISCARD\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#RL9] [client] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#RL9] [client] [0m[94m> GET pear[0m
+[33m[tester::#RL9] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$4\r\npear\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived bytes: "$-1\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived RESP null bulk string: "$-1\r\n"[0m
+[33m[tester::#RL9] [client] [0m[92m✔︎ Received "$-1\r\n"[0m
+[33m[tester::#RL9] [client] [0m[94m> GET banana[0m
+[33m[tester::#RL9] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived bytes: "$1\r\n7\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived RESP bulk string: "7"[0m
+[33m[tester::#RL9] [client] [0m[92m✔︎ Received "7"[0m
+[33m[tester::#RL9] [client] [0m[94m> DISCARD[0m
+[33m[tester::#RL9] [client] [0m[36mSent bytes: "*1\r\n$7\r\nDISCARD\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived bytes: "-ERR DISCARD without MULTI\r\n"[0m
+[33m[tester::#RL9] [client] [0m[36mReceived RESP error: "ERR DISCARD without MULTI"[0m
+[33m[tester::#RL9] [client] [0m[92m✔︎ Received "ERR DISCARD without MULTI"[0m
+[33m[tester::#RL9] [0m[92mTest passed.[0m
+[33m[tester::#RL9] [0m[36mTerminating program[0m
+[33m[tester::#RL9] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#SG9] [0m[94mRunning tests for Stage #SG9 (sg9)[0m
+[33m[tester::#SG9] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#SG9] [client-1] [0m[36mConnected (port 47826 -> port 6379)[0m
+[33m[tester::#SG9] [client-2] [0m[36mConnected (port 47840 -> port 6379)[0m
+[33m[tester::#SG9] [client-1] [0m[94m$ redis-cli SET raspberry grape[0m
+[33m[tester::#SG9] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$5\r\ngrape\r\n"[0m
+[33m[tester::#SG9] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#SG9] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#SG9] [client-1] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#SG9] [client-1] [0m[94m> SET orange 68[0m
+[33m[tester::#SG9] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$6\r\norange\r\n$2\r\n68\r\n"[0m
+[33m[tester::#SG9] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#SG9] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#SG9] [client-1] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#SG9] [client-1] [0m[94m> MULTI[0m
+[33m[tester::#SG9] [client-1] [0m[36mSent bytes: "*1\r\n$5\r\nMULTI\r\n"[0m
+[33m[tester::#SG9] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#SG9] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#SG9] [client-1] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#SG9] [0m[36mSending command: 1/2[0m
+[33m[tester::#SG9] [client-1] [0m[94m> INCR raspberry[0m
+[33m[tester::#SG9] [client-1] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#SG9] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#SG9] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#SG9] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#SG9] [0m[36mSending command: 2/2[0m
+[33m[tester::#SG9] [client-1] [0m[94m> INCR orange[0m
+[33m[tester::#SG9] [client-1] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$6\r\norange\r\n"[0m
+[33m[tester::#SG9] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#SG9] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#SG9] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#SG9] [client-1] [0m[94m> EXEC[0m
+[33m[tester::#SG9] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nEXEC\r\n"[0m
+[33m[tester::#SG9] [client-1] [0m[36mReceived bytes: "*2\r\n-ERR value is not an integer or out of range\r\n:69\r\n"[0m
+[33m[tester::#SG9] [client-1] [0m[36mReceived RESP array: [[0m
+[33m[tester::#SG9] [client-1] [0m[36m  "ERR value is not an integer or out of range",[0m
+[33m[tester::#SG9] [client-1] [0m[36m  69[0m
+[33m[tester::#SG9] [client-1] [0m[36m][0m
+[33m[tester::#SG9] [client-1] [0m[92m✔︎ Received [[0m
+[33m[tester::#SG9] [client-1] [0m[92m  "ERR value is not an integer or out of range",[0m
+[33m[tester::#SG9] [client-1] [0m[92m  69[0m
+[33m[tester::#SG9] [client-1] [0m[92m][0m
+[33m[tester::#SG9] [client-2] [0m[94m$ redis-cli GET orange[0m
+[33m[tester::#SG9] [client-2] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$6\r\norange\r\n"[0m
+[33m[tester::#SG9] [client-2] [0m[36mReceived bytes: "$2\r\n69\r\n"[0m
+[33m[tester::#SG9] [client-2] [0m[36mReceived RESP bulk string: "69"[0m
+[33m[tester::#SG9] [client-2] [0m[92m✔︎ Received "69"[0m
+[33m[tester::#SG9] [client-2] [0m[94m> GET raspberry[0m
+[33m[tester::#SG9] [client-2] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#SG9] [client-2] [0m[36mReceived bytes: "$5\r\ngrape\r\n"[0m
+[33m[tester::#SG9] [client-2] [0m[36mReceived RESP bulk string: "grape"[0m
+[33m[tester::#SG9] [client-2] [0m[92m✔︎ Received "grape"[0m
+[33m[tester::#SG9] [0m[92mTest passed.[0m
+[33m[tester::#SG9] [0m[36mTerminating program[0m
+[33m[tester::#SG9] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#JF8] [0m[94mRunning tests for Stage #JF8 (jf8)[0m
+[33m[tester::#JF8] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#JF8] [client-1] [0m[36mConnected (port 47858 -> port 6379)[0m
+[33m[tester::#JF8] [client-2] [0m[36mConnected (port 47868 -> port 6379)[0m
+[33m[tester::#JF8] [client-3] [0m[36mConnected (port 47880 -> port 6379)[0m
+[33m[tester::#JF8] [client-1] [0m[94m$ redis-cli SET raspberry 80[0m
+[33m[tester::#JF8] [client-1] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$2\r\n80\r\n"[0m
+[33m[tester::#JF8] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#JF8] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#JF8] [client-1] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#JF8] [client-1] [0m[94m> INCR blueberry[0m
+[33m[tester::#JF8] [client-1] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#JF8] [client-1] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#JF8] [client-1] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#JF8] [client-1] [0m[92m✔︎ Received 1[0m
+[33m[tester::#JF8] [client-2] [0m[94m$ redis-cli SET raspberry 80[0m
+[33m[tester::#JF8] [client-2] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$2\r\n80\r\n"[0m
+[33m[tester::#JF8] [client-2] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#JF8] [client-2] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#JF8] [client-2] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#JF8] [client-2] [0m[94m> INCR blueberry[0m
+[33m[tester::#JF8] [client-2] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#JF8] [client-2] [0m[36mReceived bytes: ":2\r\n"[0m
+[33m[tester::#JF8] [client-2] [0m[36mReceived RESP integer: 2[0m
+[33m[tester::#JF8] [client-2] [0m[92m✔︎ Received 2[0m
+[33m[tester::#JF8] [client-3] [0m[94m$ redis-cli SET raspberry 80[0m
+[33m[tester::#JF8] [client-3] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$2\r\n80\r\n"[0m
+[33m[tester::#JF8] [client-3] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#JF8] [client-3] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#JF8] [client-3] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#JF8] [client-3] [0m[94m> INCR blueberry[0m
+[33m[tester::#JF8] [client-3] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#JF8] [client-3] [0m[36mReceived bytes: ":3\r\n"[0m
+[33m[tester::#JF8] [client-3] [0m[36mReceived RESP integer: 3[0m
+[33m[tester::#JF8] [client-3] [0m[92m✔︎ Received 3[0m
+[33m[tester::#JF8] [client-1] [0m[94m> MULTI[0m
+[33m[tester::#JF8] [client-1] [0m[36mSent bytes: "*1\r\n$5\r\nMULTI\r\n"[0m
+[33m[tester::#JF8] [client-1] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#JF8] [client-1] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#JF8] [client-1] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#JF8] [0m[36mSending command: 1/2[0m
+[33m[tester::#JF8] [client-1] [0m[94m> INCR blueberry[0m
+[33m[tester::#JF8] [client-1] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#JF8] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#JF8] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#JF8] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#JF8] [0m[36mSending command: 2/2[0m
+[33m[tester::#JF8] [client-1] [0m[94m> INCR raspberry[0m
+[33m[tester::#JF8] [client-1] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#JF8] [client-1] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#JF8] [client-1] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#JF8] [client-1] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#JF8] [client-2] [0m[94m> MULTI[0m
+[33m[tester::#JF8] [client-2] [0m[36mSent bytes: "*1\r\n$5\r\nMULTI\r\n"[0m
+[33m[tester::#JF8] [client-2] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#JF8] [client-2] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#JF8] [client-2] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#JF8] [0m[36mSending command: 1/2[0m
+[33m[tester::#JF8] [client-2] [0m[94m> INCR blueberry[0m
+[33m[tester::#JF8] [client-2] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#JF8] [client-2] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#JF8] [client-2] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#JF8] [client-2] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#JF8] [0m[36mSending command: 2/2[0m
+[33m[tester::#JF8] [client-2] [0m[94m> INCR raspberry[0m
+[33m[tester::#JF8] [client-2] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#JF8] [client-2] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#JF8] [client-2] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#JF8] [client-2] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#JF8] [client-3] [0m[94m> MULTI[0m
+[33m[tester::#JF8] [client-3] [0m[36mSent bytes: "*1\r\n$5\r\nMULTI\r\n"[0m
+[33m[tester::#JF8] [client-3] [0m[36mReceived bytes: "+OK\r\n"[0m
+[33m[tester::#JF8] [client-3] [0m[36mReceived RESP simple string: "OK"[0m
+[33m[tester::#JF8] [client-3] [0m[92m✔︎ Received "OK"[0m
+[33m[tester::#JF8] [0m[36mSending command: 1/2[0m
+[33m[tester::#JF8] [client-3] [0m[94m> INCR blueberry[0m
+[33m[tester::#JF8] [client-3] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#JF8] [client-3] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#JF8] [client-3] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#JF8] [client-3] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#JF8] [0m[36mSending command: 2/2[0m
+[33m[tester::#JF8] [client-3] [0m[94m> INCR raspberry[0m
+[33m[tester::#JF8] [client-3] [0m[36mSent bytes: "*2\r\n$4\r\nINCR\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#JF8] [client-3] [0m[36mReceived bytes: "+QUEUED\r\n"[0m
+[33m[tester::#JF8] [client-3] [0m[36mReceived RESP simple string: "QUEUED"[0m
+[33m[tester::#JF8] [client-3] [0m[92m✔︎ Received "QUEUED"[0m
+[33m[tester::#JF8] [client-1] [0m[94m> EXEC[0m
+[33m[tester::#JF8] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nEXEC\r\n"[0m
+[33m[tester::#JF8] [client-1] [0m[36mReceived bytes: "*2\r\n:4\r\n:81\r\n"[0m
+[33m[tester::#JF8] [client-1] [0m[36mReceived RESP array: [4, 81][0m
+[33m[tester::#JF8] [client-1] [0m[92m✔︎ Received [4, 81][0m
+[33m[tester::#JF8] [client-2] [0m[94m> EXEC[0m
+[33m[tester::#JF8] [client-2] [0m[36mSent bytes: "*1\r\n$4\r\nEXEC\r\n"[0m
+[33m[tester::#JF8] [client-2] [0m[36mReceived bytes: "*2\r\n:5\r\n:82\r\n"[0m
+[33m[tester::#JF8] [client-2] [0m[36mReceived RESP array: [5, 82][0m
+[33m[tester::#JF8] [client-2] [0m[92m✔︎ Received [5, 82][0m
+[33m[tester::#JF8] [client-3] [0m[94m> EXEC[0m
+[33m[tester::#JF8] [client-3] [0m[36mSent bytes: "*1\r\n$4\r\nEXEC\r\n"[0m
+[33m[tester::#JF8] [client-3] [0m[36mReceived bytes: "*2\r\n:6\r\n:83\r\n"[0m
+[33m[tester::#JF8] [client-3] [0m[36mReceived RESP array: [6, 83][0m
+[33m[tester::#JF8] [client-3] [0m[92m✔︎ Received [6, 83][0m
+[33m[tester::#JF8] [0m[92mTest passed.[0m
+[33m[tester::#JF8] [0m[36mTerminating program[0m
+[33m[tester::#JF8] [0m[36mProgram terminated successfully[0m

@@ -1,0 +1,48 @@
+package internal
+
+import (
+	"fmt"
+
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+	"github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
+)
+
+func testTxIncr1(stageHarness *test_case_harness.TestCaseHarness) error {
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	if err := b.Run(); err != nil {
+		return err
+	}
+
+	logger := stageHarness.Logger
+
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+	client, err := clientsSpawner.SpawnClientWithPrefix("client")
+	if err != nil {
+		return err
+	}
+
+	value := random.RandomInt(1, 100)
+	key := random.RandomWord()
+
+	multiCommandTestCase := test_cases.MultiCommandTestCase{
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   []string{"SET", key, fmt.Sprint(value)},
+				Assertion: resp_assertions.NewSimpleStringAssertion("OK"),
+			},
+			{
+				Command:   []string{"INCR", key},
+				Assertion: resp_assertions.NewIntegerAssertion(value + 1),
+			},
+		},
+	}
+
+	return multiCommandTestCase.RunAll(client, logger)
+}

@@ -1,0 +1,12 @@
+dist
+
+# Tests generate this
+**.rdb
+
+vendor/
+.history/
+.idea/
+.vscode/
+
+# MacOS
+.DS_Store

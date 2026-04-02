@@ -1,0 +1,45 @@
+package internal
+
+import (
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+
+	"github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
+)
+
+func testStreamsXadd(stageHarness *test_case_harness.TestCaseHarness) error {
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	if err := b.Run(); err != nil {
+		return err
+	}
+
+	logger := stageHarness.Logger
+
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+	client, err := clientsSpawner.SpawnClientWithPrefix("client")
+	if err != nil {
+		return err
+	}
+
+	streamKey := random.RandomWord()
+
+	multiCommandTestCase := test_cases.MultiCommandTestCase{
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   []string{"XADD", streamKey, "0-1", "foo", "bar"},
+				Assertion: resp_assertions.NewBulkStringAssertion("0-1"),
+			},
+			{
+				Command:   []string{"TYPE", streamKey},
+				Assertion: resp_assertions.NewSimpleStringAssertion("stream"),
+			},
+		},
+	}
+
+	return multiCommandTestCase.RunAll(client, logger)
+}

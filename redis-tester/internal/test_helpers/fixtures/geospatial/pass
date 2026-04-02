@@ -1,0 +1,339 @@
+Debug = true
+
+[33m[tester::#ZT4] [0m[94mRunning tests for Stage #ZT4 (zt4)[0m
+[33m[tester::#ZT4] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#ZT4] [client] [0m[36mConnected (port 52624 -> port 6379)[0m
+[33m[tester::#ZT4] [client] [0m[94m$ redis-cli GEOADD pear 84.87784483356396 83.78927068389217 orange[0m
+[33m[tester::#ZT4] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$4\r\npear\r\n$17\r\n84.87784483356396\r\n$17\r\n83.78927068389217\r\n$6\r\norange\r\n"[0m
+[33m[tester::#ZT4] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#ZT4] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#ZT4] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#ZT4] [0m[92mTest passed.[0m
+[33m[tester::#ZT4] [0m[36mTerminating program[0m
+[33m[tester::#ZT4] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#CK3] [0m[94mRunning tests for Stage #CK3 (ck3)[0m
+[33m[tester::#CK3] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#CK3] [client] [0m[36mConnected (port 52634 -> port 6379)[0m
+[33m[tester::#CK3] [client] [0m[94m$ redis-cli GEOADD apple 21.65857905813532 419.9006243303898 banana[0m
+[33m[tester::#CK3] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$5\r\napple\r\n$17\r\n21.65857905813532\r\n$17\r\n419.9006243303898\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#CK3] [client] [0m[36mReceived bytes: "-ERR invalid longitude,latitude pair 21.658579,419.900624\r\n"[0m
+[33m[tester::#CK3] [client] [0m[36mReceived RESP error: "ERR invalid longitude,latitude pair 21.658579,419.900624"[0m
+[33m[tester::#CK3] [client] [0m[92m✔︎ Received "ERR invalid longitude,latitude pair 21.658579,419.900624"[0m
+[33m[tester::#CK3] [client] [0m[94m> GEOADD apple 21.65857905813532 -360.94922587838545 apple[0m
+[33m[tester::#CK3] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$5\r\napple\r\n$17\r\n21.65857905813532\r\n$19\r\n-360.94922587838545\r\n$5\r\napple\r\n"[0m
+[33m[tester::#CK3] [client] [0m[36mReceived bytes: "-ERR invalid longitude,latitude pair 21.658579,-360.949226\r\n"[0m
+[33m[tester::#CK3] [client] [0m[36mReceived RESP error: "ERR invalid longitude,latitude pair 21.658579,-360.949226"[0m
+[33m[tester::#CK3] [client] [0m[92m✔︎ Received "ERR invalid longitude,latitude pair 21.658579,-360.949226"[0m
+[33m[tester::#CK3] [client] [0m[94m> GEOADD apple 412.43300014980355 81.70437581711451 mango[0m
+[33m[tester::#CK3] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$5\r\napple\r\n$18\r\n412.43300014980355\r\n$17\r\n81.70437581711451\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#CK3] [client] [0m[36mReceived bytes: "-ERR invalid longitude,latitude pair 412.433000,81.704376\r\n"[0m
+[33m[tester::#CK3] [client] [0m[36mReceived RESP error: "ERR invalid longitude,latitude pair 412.433000,81.704376"[0m
+[33m[tester::#CK3] [client] [0m[92m✔︎ Received "ERR invalid longitude,latitude pair 412.433000,81.704376"[0m
+[33m[tester::#CK3] [client] [0m[94m> GEOADD apple -395.2527244839519 81.70437581711451 pear[0m
+[33m[tester::#CK3] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$5\r\napple\r\n$18\r\n-395.2527244839519\r\n$17\r\n81.70437581711451\r\n$4\r\npear\r\n"[0m
+[33m[tester::#CK3] [client] [0m[36mReceived bytes: "-ERR invalid longitude,latitude pair -395.252724,81.704376\r\n"[0m
+[33m[tester::#CK3] [client] [0m[36mReceived RESP error: "ERR invalid longitude,latitude pair -395.252724,81.704376"[0m
+[33m[tester::#CK3] [client] [0m[92m✔︎ Received "ERR invalid longitude,latitude pair -395.252724,81.704376"[0m
+[33m[tester::#CK3] [0m[92mTest passed.[0m
+[33m[tester::#CK3] [0m[36mTerminating program[0m
+[33m[tester::#CK3] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#TN5] [0m[94mRunning tests for Stage #TN5 (tn5)[0m
+[33m[tester::#TN5] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#TN5] [client] [0m[36mConnected (port 52646 -> port 6379)[0m
+[33m[tester::#TN5] [client] [0m[94m$ redis-cli GEOADD strawberry 75.57050890974058 -31.42354332430587 grape[0m
+[33m[tester::#TN5] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$10\r\nstrawberry\r\n$17\r\n75.57050890974058\r\n$18\r\n-31.42354332430587\r\n$5\r\ngrape\r\n"[0m
+[33m[tester::#TN5] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#TN5] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#TN5] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#TN5] [client] [0m[94m> GEOADD strawberry 136.30579946342218 -41.909221592016856 apple[0m
+[33m[tester::#TN5] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$10\r\nstrawberry\r\n$18\r\n136.30579946342218\r\n$19\r\n-41.909221592016856\r\n$5\r\napple\r\n"[0m
+[33m[tester::#TN5] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#TN5] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#TN5] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#TN5] [client] [0m[94m> GEOADD strawberry -72.7196185282533 2.9696164774927793 banana[0m
+[33m[tester::#TN5] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$10\r\nstrawberry\r\n$17\r\n-72.7196185282533\r\n$18\r\n2.9696164774927793\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#TN5] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#TN5] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#TN5] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#TN5] [0m[94mChecking if "strawberry" is stored as a sorted set[0m
+[33m[tester::#TN5] [client] [0m[94m> ZRANGE strawberry 0 -1[0m
+[33m[tester::#TN5] [client] [0m[36mSent bytes: "*4\r\n$6\r\nZRANGE\r\n$10\r\nstrawberry\r\n$1\r\n0\r\n$2\r\n-1\r\n"[0m
+[33m[tester::#TN5] [client] [0m[36mReceived bytes: "*3\r\n$6\r\nbanana\r\n$5\r\ngrape\r\n$5\r\napple\r\n"[0m
+[33m[tester::#TN5] [client] [0m[36mReceived RESP array: ["banana", "grape", "apple"][0m
+[33m[tester::#TN5] [client] [0m[92m✔︎ Received ["banana", "grape", "apple"][0m
+[33m[tester::#TN5] [0m[92mTest passed.[0m
+[33m[tester::#TN5] [0m[36mTerminating program[0m
+[33m[tester::#TN5] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#CR3] [0m[94mRunning tests for Stage #CR3 (cr3)[0m
+[33m[tester::#CR3] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#CR3] [client] [0m[36mConnected (port 52664 -> port 6379)[0m
+[33m[tester::#CR3] [client] [0m[94m$ redis-cli GEOADD grape -59.54965735057333 -23.3708540402562 raspberry[0m
+[33m[tester::#CR3] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$5\r\ngrape\r\n$18\r\n-59.54965735057333\r\n$17\r\n-23.3708540402562\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#CR3] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#CR3] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#CR3] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#CR3] [client] [0m[94m> GEOADD grape -144.2812603776831 36.79085988348476 orange[0m
+[33m[tester::#CR3] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$5\r\ngrape\r\n$18\r\n-144.2812603776831\r\n$17\r\n36.79085988348476\r\n$6\r\norange\r\n"[0m
+[33m[tester::#CR3] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#CR3] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#CR3] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#CR3] [0m[94mChecking the scores of added locations[0m
+[33m[tester::#CR3] [client] [0m[94m> ZSCORE grape raspberry[0m
+[33m[tester::#CR3] [client] [0m[36mSent bytes: "*3\r\n$6\r\nZSCORE\r\n$5\r\ngrape\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#CR3] [client] [0m[36mReceived bytes: "$15\r\n905093808861195\r\n"[0m
+[33m[tester::#CR3] [client] [0m[36mReceived RESP bulk string: "905093808861195"[0m
+[33m[tester::#CR3] [client] [0m[92m✔︎ Received "905093808861195"[0m
+[33m[tester::#CR3] [client] [0m[94m> ZSCORE grape orange[0m
+[33m[tester::#CR3] [client] [0m[36mSent bytes: "*3\r\n$6\r\nZSCORE\r\n$5\r\ngrape\r\n$6\r\norange\r\n"[0m
+[33m[tester::#CR3] [client] [0m[36mReceived bytes: "$16\r\n1259437281415738\r\n"[0m
+[33m[tester::#CR3] [client] [0m[36mReceived RESP bulk string: "1259437281415738"[0m
+[33m[tester::#CR3] [client] [0m[92m✔︎ Received "1259437281415738"[0m
+[33m[tester::#CR3] [0m[92mTest passed.[0m
+[33m[tester::#CR3] [0m[36mTerminating program[0m
+[33m[tester::#CR3] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#XG4] [0m[94mRunning tests for Stage #XG4 (xg4)[0m
+[33m[tester::#XG4] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#XG4] [client] [0m[36mConnected (port 52686 -> port 6379)[0m
+[33m[tester::#XG4] [client] [0m[94m$ redis-cli GEOADD banana 54.34724351146364 1.8960558353936874 orange[0m
+[33m[tester::#XG4] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$6\r\nbanana\r\n$17\r\n54.34724351146364\r\n$18\r\n1.8960558353936874\r\n$6\r\norange\r\n"[0m
+[33m[tester::#XG4] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#XG4] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#XG4] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#XG4] [client] [0m[94m> GEOADD banana -174.56706779862844 -69.90610517759342 raspberry[0m
+[33m[tester::#XG4] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$6\r\nbanana\r\n$19\r\n-174.56706779862844\r\n$18\r\n-69.90610517759342\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#XG4] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#XG4] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#XG4] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#XG4] [client] [0m[94m> GEOPOS banana missing_location_48 raspberry missing_location_55 missing_location_45 orange[0m
+[33m[tester::#XG4] [client] [0m[36mSent bytes: "*7\r\n$6\r\nGEOPOS\r\n$6\r\nbanana\r\n$19\r\nmissing_location_48\r\n$9\r\nraspberry\r\n$19\r\nmissing_location_55\r\n$19\r\nmissing_location_45\r\n$6\r\norange\r\n"[0m
+[33m[tester::#XG4] [client] [0m[36mReceived bytes: "*5\r\n*-1\r\n*2\r\n$15\r\n-174.5670703053\r\n$14\r\n-69.9061052176\r\n*-1\r\n*-1\r\n*2\r\n$13\r\n54.3472436070\r\n$12\r\n1.8960563403\r\n"[0m
+[33m[tester::#XG4] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#XG4] [client] [0m[36m  "*-1\r\n",[0m
+[33m[tester::#XG4] [client] [0m[36m  [[0m
+[33m[tester::#XG4] [client] [0m[36m    "-174.5670703053",[0m
+[33m[tester::#XG4] [client] [0m[36m    "-69.9061052176"[0m
+[33m[tester::#XG4] [client] [0m[36m  ],[0m
+[33m[tester::#XG4] [client] [0m[36m  "*-1\r\n",[0m
+[33m[tester::#XG4] [client] [0m[36m  "*-1\r\n",[0m
+[33m[tester::#XG4] [client] [0m[36m  [[0m
+[33m[tester::#XG4] [client] [0m[36m    "54.3472436070",[0m
+[33m[tester::#XG4] [client] [0m[36m    "1.8960563403"[0m
+[33m[tester::#XG4] [client] [0m[36m  ][0m
+[33m[tester::#XG4] [client] [0m[36m][0m
+[33m[tester::#XG4] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#XG4] [client] [0m[92m  "*-1\r\n",[0m
+[33m[tester::#XG4] [client] [0m[92m  [[0m
+[33m[tester::#XG4] [client] [0m[92m    "-174.5670703053",[0m
+[33m[tester::#XG4] [client] [0m[92m    "-69.9061052176"[0m
+[33m[tester::#XG4] [client] [0m[92m  ],[0m
+[33m[tester::#XG4] [client] [0m[92m  "*-1\r\n",[0m
+[33m[tester::#XG4] [client] [0m[92m  "*-1\r\n",[0m
+[33m[tester::#XG4] [client] [0m[92m  [[0m
+[33m[tester::#XG4] [client] [0m[92m    "54.3472436070",[0m
+[33m[tester::#XG4] [client] [0m[92m    "1.8960563403"[0m
+[33m[tester::#XG4] [client] [0m[92m  ][0m
+[33m[tester::#XG4] [client] [0m[92m][0m
+[33m[tester::#XG4] [client] [0m[94m> GEOPOS missing_key_19 missing_location_48 missing_location_55 missing_location_45[0m
+[33m[tester::#XG4] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOPOS\r\n$14\r\nmissing_key_19\r\n$19\r\nmissing_location_48\r\n$19\r\nmissing_location_55\r\n$19\r\nmissing_location_45\r\n"[0m
+[33m[tester::#XG4] [client] [0m[36mReceived bytes: "*3\r\n*-1\r\n*-1\r\n*-1\r\n"[0m
+[33m[tester::#XG4] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#XG4] [client] [0m[36m  "*-1\r\n",[0m
+[33m[tester::#XG4] [client] [0m[36m  "*-1\r\n",[0m
+[33m[tester::#XG4] [client] [0m[36m  "*-1\r\n"[0m
+[33m[tester::#XG4] [client] [0m[36m][0m
+[33m[tester::#XG4] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#XG4] [client] [0m[92m  "*-1\r\n",[0m
+[33m[tester::#XG4] [client] [0m[92m  "*-1\r\n",[0m
+[33m[tester::#XG4] [client] [0m[92m  "*-1\r\n"[0m
+[33m[tester::#XG4] [client] [0m[92m][0m
+[33m[tester::#XG4] [0m[92mTest passed.[0m
+[33m[tester::#XG4] [0m[36mTerminating program[0m
+[33m[tester::#XG4] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#HB5] [0m[94mRunning tests for Stage #HB5 (hb5)[0m
+[33m[tester::#HB5] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#HB5] [client] [0m[36mConnected (port 52708 -> port 6379)[0m
+[33m[tester::#HB5] [client] [0m[94m$ redis-cli ZADD raspberry 2341253753733854 orange[0m
+[33m[tester::#HB5] [client] [0m[36mSent bytes: "*4\r\n$4\r\nZADD\r\n$9\r\nraspberry\r\n$16\r\n2341253753733854\r\n$6\r\norange\r\n"[0m
+[33m[tester::#HB5] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#HB5] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#HB5] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#HB5] [client] [0m[94m> ZADD raspberry 1742892162635077 strawberry[0m
+[33m[tester::#HB5] [client] [0m[36mSent bytes: "*4\r\n$4\r\nZADD\r\n$9\r\nraspberry\r\n$16\r\n1742892162635077\r\n$10\r\nstrawberry\r\n"[0m
+[33m[tester::#HB5] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#HB5] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#HB5] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#HB5] [client] [0m[94m> ZADD raspberry 1966982934420414 apple[0m
+[33m[tester::#HB5] [client] [0m[36mSent bytes: "*4\r\n$4\r\nZADD\r\n$9\r\nraspberry\r\n$16\r\n1966982934420414\r\n$5\r\napple\r\n"[0m
+[33m[tester::#HB5] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#HB5] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#HB5] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#HB5] [client] [0m[94m> GEOPOS raspberry orange apple strawberry[0m
+[33m[tester::#HB5] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOPOS\r\n$9\r\nraspberry\r\n$6\r\norange\r\n$5\r\napple\r\n$10\r\nstrawberry\r\n"[0m
+[33m[tester::#HB5] [client] [0m[36mReceived bytes: "*3\r\n*2\r\n$12\r\n1.2979075313\r\n$14\r\n-48.2694896724\r\n*2\r\n$13\r\n-6.7445781827\r\n$13\r\n39.8208914443\r\n*2\r\n$14\r\n-65.4702731967\r\n$13\r\n13.6882939650\r\n"[0m
+[33m[tester::#HB5] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#HB5] [client] [0m[36m  [[0m
+[33m[tester::#HB5] [client] [0m[36m    "1.2979075313",[0m
+[33m[tester::#HB5] [client] [0m[36m    "-48.2694896724"[0m
+[33m[tester::#HB5] [client] [0m[36m  ],[0m
+[33m[tester::#HB5] [client] [0m[36m  [[0m
+[33m[tester::#HB5] [client] [0m[36m    "-6.7445781827",[0m
+[33m[tester::#HB5] [client] [0m[36m    "39.8208914443"[0m
+[33m[tester::#HB5] [client] [0m[36m  ],[0m
+[33m[tester::#HB5] [client] [0m[36m  [[0m
+[33m[tester::#HB5] [client] [0m[36m    "-65.4702731967",[0m
+[33m[tester::#HB5] [client] [0m[36m    "13.6882939650"[0m
+[33m[tester::#HB5] [client] [0m[36m  ][0m
+[33m[tester::#HB5] [client] [0m[36m][0m
+[33m[tester::#HB5] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#HB5] [client] [0m[92m  [[0m
+[33m[tester::#HB5] [client] [0m[92m    "1.2979075313",[0m
+[33m[tester::#HB5] [client] [0m[92m    "-48.2694896724"[0m
+[33m[tester::#HB5] [client] [0m[92m  ],[0m
+[33m[tester::#HB5] [client] [0m[92m  [[0m
+[33m[tester::#HB5] [client] [0m[92m    "-6.7445781827",[0m
+[33m[tester::#HB5] [client] [0m[92m    "39.8208914443"[0m
+[33m[tester::#HB5] [client] [0m[92m  ],[0m
+[33m[tester::#HB5] [client] [0m[92m  [[0m
+[33m[tester::#HB5] [client] [0m[92m    "-65.4702731967",[0m
+[33m[tester::#HB5] [client] [0m[92m    "13.6882939650"[0m
+[33m[tester::#HB5] [client] [0m[92m  ][0m
+[33m[tester::#HB5] [client] [0m[92m][0m
+[33m[tester::#HB5] [0m[92mTest passed.[0m
+[33m[tester::#HB5] [0m[36mTerminating program[0m
+[33m[tester::#HB5] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#EK6] [0m[94mRunning tests for Stage #EK6 (ek6)[0m
+[33m[tester::#EK6] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#EK6] [client] [0m[36mConnected (port 52734 -> port 6379)[0m
+[33m[tester::#EK6] [client] [0m[94m$ redis-cli GEOADD pear 78.43121055857065 -63.43346433567749 raspberry[0m
+[33m[tester::#EK6] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$4\r\npear\r\n$17\r\n78.43121055857065\r\n$18\r\n-63.43346433567749\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#EK6] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#EK6] [client] [0m[94m> GEOADD pear -148.87294954625148 -59.59270642299097 pear[0m
+[33m[tester::#EK6] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$4\r\npear\r\n$19\r\n-148.87294954625148\r\n$18\r\n-59.59270642299097\r\n$4\r\npear\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#EK6] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#EK6] [client] [0m[94m> GEOADD pear -126.84238278138916 48.16772326672674 strawberry[0m
+[33m[tester::#EK6] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$4\r\npear\r\n$19\r\n-126.84238278138916\r\n$17\r\n48.16772326672674\r\n$10\r\nstrawberry\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#EK6] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#EK6] [client] [0m[94m> GEOADD pear -167.94472192238158 40.345770691685566 mango[0m
+[33m[tester::#EK6] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$4\r\npear\r\n$19\r\n-167.94472192238158\r\n$18\r\n40.345770691685566\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#EK6] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#EK6] [client] [0m[94m> GEODIST pear raspberry pear[0m
+[33m[tester::#EK6] [client] [0m[36mSent bytes: "*4\r\n$7\r\nGEODIST\r\n$4\r\npear\r\n$9\r\nraspberry\r\n$4\r\npear\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived bytes: "$12\r\n5765742.4316\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived RESP bulk string: "5765742.4316"[0m
+[33m[tester::#EK6] [client] [0m[92m✔︎ Received "5765742.4316"[0m
+[33m[tester::#EK6] [client] [0m[94m> GEODIST pear raspberry strawberry[0m
+[33m[tester::#EK6] [client] [0m[36mSent bytes: "*4\r\n$7\r\nGEODIST\r\n$4\r\npear\r\n$9\r\nraspberry\r\n$10\r\nstrawberry\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived bytes: "$13\r\n17731346.1653\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived RESP bulk string: "17731346.1653"[0m
+[33m[tester::#EK6] [client] [0m[92m✔︎ Received "17731346.1653"[0m
+[33m[tester::#EK6] [client] [0m[94m> GEODIST pear raspberry mango[0m
+[33m[tester::#EK6] [client] [0m[36mSent bytes: "*4\r\n$7\r\nGEODIST\r\n$4\r\npear\r\n$9\r\nraspberry\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived bytes: "$13\r\n15092915.2444\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived RESP bulk string: "15092915.2444"[0m
+[33m[tester::#EK6] [client] [0m[92m✔︎ Received "15092915.2444"[0m
+[33m[tester::#EK6] [client] [0m[94m> GEODIST pear pear strawberry[0m
+[33m[tester::#EK6] [client] [0m[36mSent bytes: "*4\r\n$7\r\nGEODIST\r\n$4\r\npear\r\n$4\r\npear\r\n$10\r\nstrawberry\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived bytes: "$13\r\n12151441.9413\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived RESP bulk string: "12151441.9413"[0m
+[33m[tester::#EK6] [client] [0m[92m✔︎ Received "12151441.9413"[0m
+[33m[tester::#EK6] [client] [0m[94m> GEODIST pear pear mango[0m
+[33m[tester::#EK6] [client] [0m[36mSent bytes: "*4\r\n$7\r\nGEODIST\r\n$4\r\npear\r\n$4\r\npear\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived bytes: "$13\r\n11253051.8958\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived RESP bulk string: "11253051.8958"[0m
+[33m[tester::#EK6] [client] [0m[92m✔︎ Received "11253051.8958"[0m
+[33m[tester::#EK6] [client] [0m[94m> GEODIST pear strawberry mango[0m
+[33m[tester::#EK6] [client] [0m[36mSent bytes: "*4\r\n$7\r\nGEODIST\r\n$4\r\npear\r\n$10\r\nstrawberry\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived bytes: "$12\r\n3344576.1747\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived RESP bulk string: "3344576.1747"[0m
+[33m[tester::#EK6] [client] [0m[92m✔︎ Received "3344576.1747"[0m
+[33m[tester::#EK6] [client] [0m[94m> GEODIST pear pear pear[0m
+[33m[tester::#EK6] [client] [0m[36mSent bytes: "*4\r\n$7\r\nGEODIST\r\n$4\r\npear\r\n$4\r\npear\r\n$4\r\npear\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived bytes: "$6\r\n0.0000\r\n"[0m
+[33m[tester::#EK6] [client] [0m[36mReceived RESP bulk string: "0.0000"[0m
+[33m[tester::#EK6] [client] [0m[92m✔︎ Received "0.0000"[0m
+[33m[tester::#EK6] [0m[92mTest passed.[0m
+[33m[tester::#EK6] [0m[36mTerminating program[0m
+[33m[tester::#EK6] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#RM9] [0m[94mRunning tests for Stage #RM9 (rm9)[0m
+[33m[tester::#RM9] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#RM9] [client] [0m[36mConnected (port 52750 -> port 6379)[0m
+[33m[tester::#RM9] [client] [0m[94m$ redis-cli GEOADD banana -0.27295277018451136 -22.13743237179464 pear[0m
+[33m[tester::#RM9] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$6\r\nbanana\r\n$20\r\n-0.27295277018451136\r\n$18\r\n-22.13743237179464\r\n$4\r\npear\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#RM9] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#RM9] [client] [0m[94m> GEOADD banana 160.61411432607414 53.16809740420278 apple[0m
+[33m[tester::#RM9] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$6\r\nbanana\r\n$18\r\n160.61411432607414\r\n$17\r\n53.16809740420278\r\n$5\r\napple\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#RM9] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#RM9] [client] [0m[94m> GEOADD banana 45.021497398521944 75.46533849201002 blueberry[0m
+[33m[tester::#RM9] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$6\r\nbanana\r\n$18\r\n45.021497398521944\r\n$17\r\n75.46533849201002\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#RM9] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#RM9] [client] [0m[94m> GEOADD banana -118.42855082587099 13.532205787915279 raspberry[0m
+[33m[tester::#RM9] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$6\r\nbanana\r\n$19\r\n-118.42855082587099\r\n$18\r\n13.532205787915279\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#RM9] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#RM9] [client] [0m[94m> GEOADD banana 147.0698340456642 54.72801004811157 banana[0m
+[33m[tester::#RM9] [client] [0m[36mSent bytes: "*5\r\n$6\r\nGEOADD\r\n$6\r\nbanana\r\n$17\r\n147.0698340456642\r\n$17\r\n54.72801004811157\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#RM9] [client] [0m[92m✔︎ Received 1[0m
+[33m[tester::#RM9] [client] [0m[94m> GEOSEARCH banana FROMLONLAT 46.80078843484096 34.951243872089 BYRADIUS 3380404.3682473153 m[0m
+[33m[tester::#RM9] [client] [0m[36mSent bytes: "*8\r\n$9\r\nGEOSEARCH\r\n$6\r\nbanana\r\n$10\r\nFROMLONLAT\r\n$17\r\n46.80078843484096\r\n$15\r\n34.951243872089\r\n$8\r\nBYRADIUS\r\n$18\r\n3380404.3682473153\r\n$1\r\nm\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived bytes: "*0\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived RESP array: [][0m
+[33m[tester::#RM9] [client] [0m[92m✔︎ Received [][0m
+[33m[tester::#RM9] [client] [0m[94m> GEOSEARCH banana FROMLONLAT 46.80078843484096 34.951243872089 BYRADIUS 18009138.8330044 m[0m
+[33m[tester::#RM9] [client] [0m[36mSent bytes: "*8\r\n$9\r\nGEOSEARCH\r\n$6\r\nbanana\r\n$10\r\nFROMLONLAT\r\n$17\r\n46.80078843484096\r\n$15\r\n34.951243872089\r\n$8\r\nBYRADIUS\r\n$16\r\n18009138.8330044\r\n$1\r\nm\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived bytes: "*5\r\n$9\r\nblueberry\r\n$6\r\nbanana\r\n$5\r\napple\r\n$9\r\nraspberry\r\n$4\r\npear\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#RM9] [client] [0m[36m  "blueberry",[0m
+[33m[tester::#RM9] [client] [0m[36m  "banana",[0m
+[33m[tester::#RM9] [client] [0m[36m  "apple",[0m
+[33m[tester::#RM9] [client] [0m[36m  "raspberry",[0m
+[33m[tester::#RM9] [client] [0m[36m  "pear"[0m
+[33m[tester::#RM9] [client] [0m[36m][0m
+[33m[tester::#RM9] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#RM9] [client] [0m[92m  "blueberry",[0m
+[33m[tester::#RM9] [client] [0m[92m  "banana",[0m
+[33m[tester::#RM9] [client] [0m[92m  "apple",[0m
+[33m[tester::#RM9] [client] [0m[92m  "raspberry",[0m
+[33m[tester::#RM9] [client] [0m[92m  "pear"[0m
+[33m[tester::#RM9] [client] [0m[92m][0m
+[33m[tester::#RM9] [client] [0m[94m> GEOSEARCH banana FROMLONLAT 46.80078843484096 34.951243872089 BYRADIUS 9457258.445366636 m[0m
+[33m[tester::#RM9] [client] [0m[36mSent bytes: "*8\r\n$9\r\nGEOSEARCH\r\n$6\r\nbanana\r\n$10\r\nFROMLONLAT\r\n$17\r\n46.80078843484096\r\n$15\r\n34.951243872089\r\n$8\r\nBYRADIUS\r\n$17\r\n9457258.445366636\r\n$1\r\nm\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived bytes: "*4\r\n$9\r\nblueberry\r\n$6\r\nbanana\r\n$5\r\napple\r\n$4\r\npear\r\n"[0m
+[33m[tester::#RM9] [client] [0m[36mReceived RESP array: [[0m
+[33m[tester::#RM9] [client] [0m[36m  "blueberry",[0m
+[33m[tester::#RM9] [client] [0m[36m  "banana",[0m
+[33m[tester::#RM9] [client] [0m[36m  "apple",[0m
+[33m[tester::#RM9] [client] [0m[36m  "pear"[0m
+[33m[tester::#RM9] [client] [0m[36m][0m
+[33m[tester::#RM9] [client] [0m[92m✔︎ Received [[0m
+[33m[tester::#RM9] [client] [0m[92m  "blueberry",[0m
+[33m[tester::#RM9] [client] [0m[92m  "banana",[0m
+[33m[tester::#RM9] [client] [0m[92m  "apple",[0m
+[33m[tester::#RM9] [client] [0m[92m  "pear"[0m
+[33m[tester::#RM9] [client] [0m[92m][0m
+[33m[tester::#RM9] [0m[92mTest passed.[0m
+[33m[tester::#RM9] [0m[36mTerminating program[0m
+[33m[tester::#RM9] [0m[36mProgram terminated successfully[0m

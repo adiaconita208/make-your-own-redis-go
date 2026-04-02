@@ -1,0 +1,63 @@
+package resp_assertions
+
+import (
+	"fmt"
+	"slices"
+
+	resp_value "github.com/codecrafters-io/redis-tester/internal/resp/value"
+	"github.com/dustin/go-humanize/english"
+)
+
+type ArrayElementAssertionSpecification struct {
+	ArrayElementAssertion ArrayElementAssertion
+	PreAssertionHook      func()
+	AssertionSuccessHook  func()
+}
+
+type ArrayElementsAssertion struct {
+	ArrayElementAssertionSpecifications []ArrayElementAssertionSpecification
+}
+
+func (a ArrayElementsAssertion) Run(value resp_value.Value) error {
+	dataTypeAssertion := DataTypeAssertion{ExpectedType: resp_value.ARRAY}
+
+	if err := dataTypeAssertion.Run(value); err != nil {
+		return err
+	}
+
+	array := value.Array()
+
+	// If the specification is empty, panic
+	if len(a.ArrayElementAssertionSpecifications) == 0 {
+		panic("Codecrafters Internal Error - ArrayElementsAssertion called with empty specifications")
+	}
+
+	largestIndex := slices.MaxFunc(a.ArrayElementAssertionSpecifications, func(a, b ArrayElementAssertionSpecification) int {
+		return a.ArrayElementAssertion.Index - b.ArrayElementAssertion.Index
+	}).ArrayElementAssertion.Index
+
+	if largestIndex >= len(array) {
+		return fmt.Errorf(
+			"Expected at least %s to be present in the array, got only %d",
+			english.Plural((largestIndex+1), "element", "elements"),
+			len(array),
+		)
+	}
+
+	// Sort the indexes so the assertion runs serially
+	slices.SortFunc(a.ArrayElementAssertionSpecifications, func(aea1, aea2 ArrayElementAssertionSpecification) int {
+		return aea1.ArrayElementAssertion.Index - aea2.ArrayElementAssertion.Index
+	})
+
+	multiAssertion := MultiAssertion{}
+
+	for _, arrayElementAssertionSpecification := range a.ArrayElementAssertionSpecifications {
+		multiAssertion.AssertionSpecifications = append(multiAssertion.AssertionSpecifications, AssertionSpecification{
+			Assertion:            arrayElementAssertionSpecification.ArrayElementAssertion,
+			PreAssertionHook:     arrayElementAssertionSpecification.PreAssertionHook,
+			AssertionSuccessHook: arrayElementAssertionSpecification.AssertionSuccessHook,
+		})
+	}
+
+	return multiAssertion.Run(value)
+}

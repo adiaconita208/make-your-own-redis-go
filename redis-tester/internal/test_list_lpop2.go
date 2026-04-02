@@ -1,0 +1,52 @@
+package internal
+
+import (
+	"strconv"
+
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
+)
+
+func testListLpop2(stageHarness *test_case_harness.TestCaseHarness) error {
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	if err := b.Run(); err != nil {
+		return err
+	}
+
+	logger := stageHarness.Logger
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+	client, err := clientsSpawner.SpawnClientWithPrefix("client")
+	if err != nil {
+		return err
+	}
+
+	listKey := testerutils_random.RandomWord()
+	listSize := testerutils_random.RandomInt(5, 9)
+	elements := testerutils_random.RandomWords(listSize)
+	toRemoveCount := testerutils_random.RandomInt(2, 5)
+
+	multiCommandTestCase := test_cases.MultiCommandTestCase{
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   append([]string{"RPUSH", listKey}, elements...),
+				Assertion: resp_assertions.NewIntegerAssertion(listSize),
+			},
+			{
+				Command:   []string{"LPOP", listKey, strconv.Itoa(toRemoveCount)},
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(elements[0:toRemoveCount]),
+			},
+			{
+				Command:   []string{"LRANGE", listKey, strconv.Itoa(0), strconv.Itoa(-1)},
+				Assertion: resp_assertions.NewOrderedBulkStringArrayAssertion(elements[toRemoveCount:]),
+			},
+		},
+	}
+
+	return multiCommandTestCase.RunAll(client, logger)
+}

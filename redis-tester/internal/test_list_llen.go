@@ -1,0 +1,52 @@
+package internal
+
+import (
+	"fmt"
+
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
+)
+
+func testListLlen(stageHarness *test_case_harness.TestCaseHarness) error {
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	if err := b.Run(); err != nil {
+		return err
+	}
+
+	logger := stageHarness.Logger
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+	client, err := clientsSpawner.SpawnClientWithPrefix("client")
+	if err != nil {
+		return err
+	}
+
+	listKey := testerutils_random.RandomWord()
+	listSize := testerutils_random.RandomInt(4, 8)
+	elements := testerutils_random.RandomWords(listSize)
+	missingKey := fmt.Sprintf("missing_key_%d", testerutils_random.RandomInt(1, 100))
+
+	multiCommandTestCase := test_cases.MultiCommandTestCase{
+		CommandWithAssertions: []test_cases.CommandWithAssertion{
+			{
+				Command:   append([]string{"RPUSH", listKey}, elements...),
+				Assertion: resp_assertions.NewIntegerAssertion(listSize),
+			},
+			{
+				Command:   []string{"LLEN", listKey},
+				Assertion: resp_assertions.NewIntegerAssertion(listSize),
+			},
+			{
+				Command:   []string{"LLEN", missingKey},
+				Assertion: resp_assertions.NewIntegerAssertion(0),
+			},
+		},
+	}
+
+	return multiCommandTestCase.RunAll(client, logger)
+}

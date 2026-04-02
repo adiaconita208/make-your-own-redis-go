@@ -1,0 +1,292 @@
+Debug = true
+
+[33m[tester::#MX3] [0m[94mRunning tests for Stage #MX3 (mx3)[0m
+[33m[tester::#MX3] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#MX3] [client] [0m[36mConnected (port 47924 -> port 6379)[0m
+[33m[tester::#MX3] [client] [0m[94m$ redis-cli SUBSCRIBE pear[0m
+[33m[tester::#MX3] [client] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$4\r\npear\r\n"[0m
+[33m[tester::#MX3] [client] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$4\r\npear\r\n:1\r\n"[0m
+[33m[tester::#MX3] [client] [0m[36mReceived RESP array: ["subscribe", "pear", 1][0m
+[33m[tester::#MX3] [client] [0m[92m✔︎ Received ["subscribe", "pear", 1][0m
+[33m[tester::#MX3] [0m[92mTest passed.[0m
+[33m[tester::#MX3] [0m[36mTerminating program[0m
+[33m[tester::#MX3] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#ZC8] [0m[94mRunning tests for Stage #ZC8 (zc8)[0m
+[33m[tester::#ZC8] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#ZC8] [client-1] [0m[36mConnected (port 47948 -> port 6379)[0m
+[33m[tester::#ZC8] [client-2] [0m[36mConnected (port 47954 -> port 6379)[0m
+[33m[tester::#ZC8] [client-1] [0m[94m$ redis-cli SUBSCRIBE orange[0m
+[33m[tester::#ZC8] [client-1] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$6\r\norange\r\n"[0m
+[33m[tester::#ZC8] [client-1] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$6\r\norange\r\n:1\r\n"[0m
+[33m[tester::#ZC8] [client-1] [0m[36mReceived RESP array: ["subscribe", "orange", 1][0m
+[33m[tester::#ZC8] [client-1] [0m[92m✔︎ Received ["subscribe", "orange", 1][0m
+[33m[tester::#ZC8] [client-1] [0m[94m> SUBSCRIBE mango[0m
+[33m[tester::#ZC8] [client-1] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#ZC8] [client-1] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$5\r\nmango\r\n:2\r\n"[0m
+[33m[tester::#ZC8] [client-1] [0m[36mReceived RESP array: ["subscribe", "mango", 2][0m
+[33m[tester::#ZC8] [client-1] [0m[92m✔︎ Received ["subscribe", "mango", 2][0m
+[33m[tester::#ZC8] [client-1] [0m[94m> SUBSCRIBE pineapple[0m
+[33m[tester::#ZC8] [client-1] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$9\r\npineapple\r\n"[0m
+[33m[tester::#ZC8] [client-1] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$9\r\npineapple\r\n:3\r\n"[0m
+[33m[tester::#ZC8] [client-1] [0m[36mReceived RESP array: ["subscribe", "pineapple", 3][0m
+[33m[tester::#ZC8] [client-1] [0m[92m✔︎ Received ["subscribe", "pineapple", 3][0m
+[33m[tester::#ZC8] [client-2] [0m[94m$ redis-cli SUBSCRIBE orange[0m
+[33m[tester::#ZC8] [client-2] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$6\r\norange\r\n"[0m
+[33m[tester::#ZC8] [client-2] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$6\r\norange\r\n:1\r\n"[0m
+[33m[tester::#ZC8] [client-2] [0m[36mReceived RESP array: ["subscribe", "orange", 1][0m
+[33m[tester::#ZC8] [client-2] [0m[92m✔︎ Received ["subscribe", "orange", 1][0m
+[33m[tester::#ZC8] [client-2] [0m[94m> SUBSCRIBE mango[0m
+[33m[tester::#ZC8] [client-2] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#ZC8] [client-2] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$5\r\nmango\r\n:2\r\n"[0m
+[33m[tester::#ZC8] [client-2] [0m[36mReceived RESP array: ["subscribe", "mango", 2][0m
+[33m[tester::#ZC8] [client-2] [0m[92m✔︎ Received ["subscribe", "mango", 2][0m
+[33m[tester::#ZC8] [client-2] [0m[94m> SUBSCRIBE pineapple[0m
+[33m[tester::#ZC8] [client-2] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$9\r\npineapple\r\n"[0m
+[33m[tester::#ZC8] [client-2] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$9\r\npineapple\r\n:3\r\n"[0m
+[33m[tester::#ZC8] [client-2] [0m[36mReceived RESP array: ["subscribe", "pineapple", 3][0m
+[33m[tester::#ZC8] [client-2] [0m[92m✔︎ Received ["subscribe", "pineapple", 3][0m
+[33m[tester::#ZC8] [0m[92mTest passed.[0m
+[33m[tester::#ZC8] [0m[36mTerminating program[0m
+[33m[tester::#ZC8] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#AW8] [0m[94mRunning tests for Stage #AW8 (aw8)[0m
+[33m[tester::#AW8] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#AW8] [client] [0m[36mConnected (port 59934 -> port 6379)[0m
+[33m[tester::#AW8] [client] [0m[94m$ redis-cli SUBSCRIBE strawberry[0m
+[33m[tester::#AW8] [client] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$10\r\nstrawberry\r\n"[0m
+[33m[tester::#AW8] [client] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$10\r\nstrawberry\r\n:1\r\n"[0m
+[33m[tester::#AW8] [client] [0m[36mReceived RESP array: ["subscribe", "strawberry", 1][0m
+[33m[tester::#AW8] [client] [0m[92m✔︎ Received ["subscribe", "strawberry", 1][0m
+[33m[tester::#AW8] [client] [0m[94m> SET raspberry grape[0m
+[33m[tester::#AW8] [client] [0m[36mSent bytes: "*3\r\n$3\r\nSET\r\n$9\r\nraspberry\r\n$5\r\ngrape\r\n"[0m
+[33m[tester::#AW8] [client] [0m[36mReceived bytes: "-ERR Can't execute 'set': only (P|S)SUBSCRIBE / (P|S)UNSUBSCRIBE / PING / QUIT / RESET are allowed in this context\r\n"[0m
+[33m[tester::#AW8] [client] [0m[36mReceived RESP error: "ERR Can't execute 'set': only (P|S)SUBSCRIBE / (P|S)UNSUBSCRIBE / PING / QUIT / RESET are allowed in this context"[0m
+[33m[tester::#AW8] [client] [0m[92m✔︎ Received "ERR Can't execute 'set': only (P|S)SUBSCRIBE / (P|S)UNSUBSCRIBE / PING / QUIT / RESET are allowed in this context"[0m
+[33m[tester::#AW8] [client] [0m[94m> GET grape[0m
+[33m[tester::#AW8] [client] [0m[36mSent bytes: "*2\r\n$3\r\nGET\r\n$5\r\ngrape\r\n"[0m
+[33m[tester::#AW8] [client] [0m[36mReceived bytes: "-ERR Can't execute 'get': only (P|S)SUBSCRIBE / (P|S)UNSUBSCRIBE / PING / QUIT / RESET are allowed in this context\r\n"[0m
+[33m[tester::#AW8] [client] [0m[36mReceived RESP error: "ERR Can't execute 'get': only (P|S)SUBSCRIBE / (P|S)UNSUBSCRIBE / PING / QUIT / RESET are allowed in this context"[0m
+[33m[tester::#AW8] [client] [0m[92m✔︎ Received "ERR Can't execute 'get': only (P|S)SUBSCRIBE / (P|S)UNSUBSCRIBE / PING / QUIT / RESET are allowed in this context"[0m
+[33m[tester::#AW8] [client] [0m[94m> ECHO grape[0m
+[33m[tester::#AW8] [client] [0m[36mSent bytes: "*2\r\n$4\r\nECHO\r\n$5\r\ngrape\r\n"[0m
+[33m[tester::#AW8] [client] [0m[36mReceived bytes: "-ERR Can't execute 'echo': only (P|S)SUBSCRIBE / (P|S)UNSUBSCRIBE / PING / QUIT / RESET are allowed in this context\r\n"[0m
+[33m[tester::#AW8] [client] [0m[36mReceived RESP error: "ERR Can't execute 'echo': only (P|S)SUBSCRIBE / (P|S)UNSUBSCRIBE / PING / QUIT / RESET are allowed in this context"[0m
+[33m[tester::#AW8] [client] [0m[92m✔︎ Received "ERR Can't execute 'echo': only (P|S)SUBSCRIBE / (P|S)UNSUBSCRIBE / PING / QUIT / RESET are allowed in this context"[0m
+[33m[tester::#AW8] [client] [0m[94m> SUBSCRIBE apple[0m
+[33m[tester::#AW8] [client] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$5\r\napple\r\n"[0m
+[33m[tester::#AW8] [client] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$5\r\napple\r\n:2\r\n"[0m
+[33m[tester::#AW8] [client] [0m[36mReceived RESP array: ["subscribe", "apple", 2][0m
+[33m[tester::#AW8] [client] [0m[92m✔︎ Received ["subscribe", "apple", 2][0m
+[33m[tester::#AW8] [0m[92mTest passed.[0m
+[33m[tester::#AW8] [0m[36mTerminating program[0m
+[33m[tester::#AW8] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#LF1] [0m[94mRunning tests for Stage #LF1 (lf1)[0m
+[33m[tester::#LF1] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#LF1] [client-1] [0m[36mConnected (port 59948 -> port 6379)[0m
+[33m[tester::#LF1] [client-2] [0m[36mConnected (port 59952 -> port 6379)[0m
+[33m[tester::#LF1] [client-1] [0m[94m$ redis-cli SUBSCRIBE banana[0m
+[33m[tester::#LF1] [client-1] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#LF1] [client-1] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$6\r\nbanana\r\n:1\r\n"[0m
+[33m[tester::#LF1] [client-1] [0m[36mReceived RESP array: ["subscribe", "banana", 1][0m
+[33m[tester::#LF1] [client-1] [0m[92m✔︎ Received ["subscribe", "banana", 1][0m
+[33m[tester::#LF1] [client-1] [0m[94m> PING[0m
+[33m[tester::#LF1] [client-1] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
+[33m[tester::#LF1] [client-1] [0m[36mReceived bytes: "*2\r\n$4\r\npong\r\n$0\r\n\r\n"[0m
+[33m[tester::#LF1] [client-1] [0m[36mReceived RESP array: ["pong", ""][0m
+[33m[tester::#LF1] [client-1] [0m[92m✔︎ Received ["pong", ""][0m
+[33m[tester::#LF1] [client-2] [0m[94m$ redis-cli PING[0m
+[33m[tester::#LF1] [client-2] [0m[36mSent bytes: "*1\r\n$4\r\nPING\r\n"[0m
+[33m[tester::#LF1] [client-2] [0m[36mReceived bytes: "+PONG\r\n"[0m
+[33m[tester::#LF1] [client-2] [0m[36mReceived RESP simple string: "PONG"[0m
+[33m[tester::#LF1] [client-2] [0m[92m✔︎ Received "PONG"[0m
+[33m[tester::#LF1] [0m[92mTest passed.[0m
+[33m[tester::#LF1] [0m[36mTerminating program[0m
+[33m[tester::#LF1] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#HF2] [0m[94mRunning tests for Stage #HF2 (hf2)[0m
+[33m[tester::#HF2] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#HF2] [client-1] [0m[36mConnected (port 59968 -> port 6379)[0m
+[33m[tester::#HF2] [client-2] [0m[36mConnected (port 59974 -> port 6379)[0m
+[33m[tester::#HF2] [client-3] [0m[36mConnected (port 59986 -> port 6379)[0m
+[33m[tester::#HF2] [client-4] [0m[36mConnected (port 60000 -> port 6379)[0m
+[33m[tester::#HF2] [client-1] [0m[94m$ redis-cli SUBSCRIBE grape[0m
+[33m[tester::#HF2] [client-1] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$5\r\ngrape\r\n"[0m
+[33m[tester::#HF2] [client-1] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$5\r\ngrape\r\n:1\r\n"[0m
+[33m[tester::#HF2] [client-1] [0m[36mReceived RESP array: ["subscribe", "grape", 1][0m
+[33m[tester::#HF2] [client-1] [0m[92m✔︎ Received ["subscribe", "grape", 1][0m
+[33m[tester::#HF2] [client-2] [0m[94m$ redis-cli SUBSCRIBE orange[0m
+[33m[tester::#HF2] [client-2] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$6\r\norange\r\n"[0m
+[33m[tester::#HF2] [client-2] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$6\r\norange\r\n:1\r\n"[0m
+[33m[tester::#HF2] [client-2] [0m[36mReceived RESP array: ["subscribe", "orange", 1][0m
+[33m[tester::#HF2] [client-2] [0m[92m✔︎ Received ["subscribe", "orange", 1][0m
+[33m[tester::#HF2] [client-3] [0m[94m$ redis-cli SUBSCRIBE orange[0m
+[33m[tester::#HF2] [client-3] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$6\r\norange\r\n"[0m
+[33m[tester::#HF2] [client-3] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$6\r\norange\r\n:1\r\n"[0m
+[33m[tester::#HF2] [client-3] [0m[36mReceived RESP array: ["subscribe", "orange", 1][0m
+[33m[tester::#HF2] [client-3] [0m[92m✔︎ Received ["subscribe", "orange", 1][0m
+[33m[tester::#HF2] [client-4] [0m[94m$ redis-cli PUBLISH grape mango[0m
+[33m[tester::#HF2] [client-4] [0m[36mSent bytes: "*3\r\n$7\r\nPUBLISH\r\n$5\r\ngrape\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#HF2] [client-4] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#HF2] [client-4] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#HF2] [client-4] [0m[92m✔︎ Received 1[0m
+[33m[tester::#HF2] [client-4] [0m[94m> PUBLISH orange banana[0m
+[33m[tester::#HF2] [client-4] [0m[36mSent bytes: "*3\r\n$7\r\nPUBLISH\r\n$6\r\norange\r\n$6\r\nbanana\r\n"[0m
+[33m[tester::#HF2] [client-4] [0m[36mReceived bytes: ":2\r\n"[0m
+[33m[tester::#HF2] [client-4] [0m[36mReceived RESP integer: 2[0m
+[33m[tester::#HF2] [client-4] [0m[92m✔︎ Received 2[0m
+[33m[tester::#HF2] [0m[92mTest passed.[0m
+[33m[tester::#HF2] [0m[36mTerminating program[0m
+[33m[tester::#HF2] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#DN4] [0m[94mRunning tests for Stage #DN4 (dn4)[0m
+[33m[tester::#DN4] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#DN4] [client-1] [0m[36mConnected (port 60012 -> port 6379)[0m
+[33m[tester::#DN4] [client-2] [0m[36mConnected (port 60018 -> port 6379)[0m
+[33m[tester::#DN4] [client-3] [0m[36mConnected (port 60028 -> port 6379)[0m
+[33m[tester::#DN4] [client-4] [0m[36mConnected (port 60038 -> port 6379)[0m
+[33m[tester::#DN4] [client-1] [0m[94m$ redis-cli SUBSCRIBE raspberry[0m
+[33m[tester::#DN4] [client-1] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#DN4] [client-1] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$9\r\nraspberry\r\n:1\r\n"[0m
+[33m[tester::#DN4] [client-1] [0m[36mReceived RESP array: ["subscribe", "raspberry", 1][0m
+[33m[tester::#DN4] [client-1] [0m[92m✔︎ Received ["subscribe", "raspberry", 1][0m
+[33m[tester::#DN4] [client-2] [0m[94m$ redis-cli SUBSCRIBE raspberry[0m
+[33m[tester::#DN4] [client-2] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$9\r\nraspberry\r\n"[0m
+[33m[tester::#DN4] [client-2] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$9\r\nraspberry\r\n:1\r\n"[0m
+[33m[tester::#DN4] [client-2] [0m[36mReceived RESP array: ["subscribe", "raspberry", 1][0m
+[33m[tester::#DN4] [client-2] [0m[92m✔︎ Received ["subscribe", "raspberry", 1][0m
+[33m[tester::#DN4] [client-3] [0m[94m$ redis-cli SUBSCRIBE orange[0m
+[33m[tester::#DN4] [client-3] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$6\r\norange\r\n"[0m
+[33m[tester::#DN4] [client-3] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$6\r\norange\r\n:1\r\n"[0m
+[33m[tester::#DN4] [client-3] [0m[36mReceived RESP array: ["subscribe", "orange", 1][0m
+[33m[tester::#DN4] [client-3] [0m[92m✔︎ Received ["subscribe", "orange", 1][0m
+[33m[tester::#DN4] [client-4] [0m[94m$ redis-cli PUBLISH raspberry blueberry[0m
+[33m[tester::#DN4] [client-4] [0m[36mSent bytes: "*3\r\n$7\r\nPUBLISH\r\n$9\r\nraspberry\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#DN4] [client-4] [0m[36mReceived bytes: ":2\r\n"[0m
+[33m[tester::#DN4] [client-4] [0m[36mReceived RESP integer: 2[0m
+[33m[tester::#DN4] [client-4] [0m[92m✔︎ Received 2[0m
+[33m[tester::#DN4] [client-1] [0m[94mExpecting published message: "blueberry"[0m
+[33m[tester::#DN4] [client-1] [0m[36mReceived bytes: "*3\r\n$7\r\nmessage\r\n$9\r\nraspberry\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#DN4] [client-1] [0m[36mReceived RESP array: [[0m
+[33m[tester::#DN4] [client-1] [0m[36m  "message",[0m
+[33m[tester::#DN4] [client-1] [0m[36m  "raspberry",[0m
+[33m[tester::#DN4] [client-1] [0m[36m  "blueberry"[0m
+[33m[tester::#DN4] [client-1] [0m[36m][0m
+[33m[tester::#DN4] [client-1] [0m[92m✔︎ Received [[0m
+[33m[tester::#DN4] [client-1] [0m[92m  "message",[0m
+[33m[tester::#DN4] [client-1] [0m[92m  "raspberry",[0m
+[33m[tester::#DN4] [client-1] [0m[92m  "blueberry"[0m
+[33m[tester::#DN4] [client-1] [0m[92m][0m
+[33m[tester::#DN4] [client-2] [0m[94mExpecting published message: "blueberry"[0m
+[33m[tester::#DN4] [client-2] [0m[36mReceived bytes: "*3\r\n$7\r\nmessage\r\n$9\r\nraspberry\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#DN4] [client-2] [0m[36mReceived RESP array: [[0m
+[33m[tester::#DN4] [client-2] [0m[36m  "message",[0m
+[33m[tester::#DN4] [client-2] [0m[36m  "raspberry",[0m
+[33m[tester::#DN4] [client-2] [0m[36m  "blueberry"[0m
+[33m[tester::#DN4] [client-2] [0m[36m][0m
+[33m[tester::#DN4] [client-2] [0m[92m✔︎ Received [[0m
+[33m[tester::#DN4] [client-2] [0m[92m  "message",[0m
+[33m[tester::#DN4] [client-2] [0m[92m  "raspberry",[0m
+[33m[tester::#DN4] [client-2] [0m[92m  "blueberry"[0m
+[33m[tester::#DN4] [client-2] [0m[92m][0m
+[33m[tester::#DN4] [client-3] [0m[94mExpecting no response[0m
+[33m[tester::#DN4] [client-3] [0m[92m✔︎ No response received yet[0m
+[33m[tester::#DN4] [client-4] [0m[94m> PUBLISH orange grape[0m
+[33m[tester::#DN4] [client-4] [0m[36mSent bytes: "*3\r\n$7\r\nPUBLISH\r\n$6\r\norange\r\n$5\r\ngrape\r\n"[0m
+[33m[tester::#DN4] [client-4] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#DN4] [client-4] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#DN4] [client-4] [0m[92m✔︎ Received 1[0m
+[33m[tester::#DN4] [client-1] [0m[94mExpecting no response[0m
+[33m[tester::#DN4] [client-1] [0m[92m✔︎ No response received yet[0m
+[33m[tester::#DN4] [client-2] [0m[94mExpecting no response[0m
+[33m[tester::#DN4] [client-2] [0m[92m✔︎ No response received yet[0m
+[33m[tester::#DN4] [client-3] [0m[94mExpecting published message: "grape"[0m
+[33m[tester::#DN4] [client-3] [0m[36mReceived bytes: "*3\r\n$7\r\nmessage\r\n$6\r\norange\r\n$5\r\ngrape\r\n"[0m
+[33m[tester::#DN4] [client-3] [0m[36mReceived RESP array: ["message", "orange", "grape"][0m
+[33m[tester::#DN4] [client-3] [0m[92m✔︎ Received ["message", "orange", "grape"][0m
+[33m[tester::#DN4] [0m[92mTest passed.[0m
+[33m[tester::#DN4] [0m[36mTerminating program[0m
+[33m[tester::#DN4] [0m[36mProgram terminated successfully[0m
+
+[33m[tester::#ZE9] [0m[94mRunning tests for Stage #ZE9 (ze9)[0m
+[33m[tester::#ZE9] [0m[94m$ ./spawn_redis_server.sh[0m
+[33m[tester::#ZE9] [client-1] [0m[36mConnected (port 60046 -> port 6379)[0m
+[33m[tester::#ZE9] [client-2] [0m[36mConnected (port 60052 -> port 6379)[0m
+[33m[tester::#ZE9] [client-3] [0m[36mConnected (port 60062 -> port 6379)[0m
+[33m[tester::#ZE9] [client-1] [0m[94m$ redis-cli SUBSCRIBE apple[0m
+[33m[tester::#ZE9] [client-1] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$5\r\napple\r\n"[0m
+[33m[tester::#ZE9] [client-1] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$5\r\napple\r\n:1\r\n"[0m
+[33m[tester::#ZE9] [client-1] [0m[36mReceived RESP array: ["subscribe", "apple", 1][0m
+[33m[tester::#ZE9] [client-1] [0m[92m✔︎ Received ["subscribe", "apple", 1][0m
+[33m[tester::#ZE9] [client-1] [0m[94m> SUBSCRIBE strawberry[0m
+[33m[tester::#ZE9] [client-1] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$10\r\nstrawberry\r\n"[0m
+[33m[tester::#ZE9] [client-1] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$10\r\nstrawberry\r\n:2\r\n"[0m
+[33m[tester::#ZE9] [client-1] [0m[36mReceived RESP array: ["subscribe", "strawberry", 2][0m
+[33m[tester::#ZE9] [client-1] [0m[92m✔︎ Received ["subscribe", "strawberry", 2][0m
+[33m[tester::#ZE9] [client-2] [0m[94m$ redis-cli SUBSCRIBE strawberry[0m
+[33m[tester::#ZE9] [client-2] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$10\r\nstrawberry\r\n"[0m
+[33m[tester::#ZE9] [client-2] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$10\r\nstrawberry\r\n:1\r\n"[0m
+[33m[tester::#ZE9] [client-2] [0m[36mReceived RESP array: ["subscribe", "strawberry", 1][0m
+[33m[tester::#ZE9] [client-2] [0m[92m✔︎ Received ["subscribe", "strawberry", 1][0m
+[33m[tester::#ZE9] [client-2] [0m[94m> SUBSCRIBE mango[0m
+[33m[tester::#ZE9] [client-2] [0m[36mSent bytes: "*2\r\n$9\r\nSUBSCRIBE\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#ZE9] [client-2] [0m[36mReceived bytes: "*3\r\n$9\r\nsubscribe\r\n$5\r\nmango\r\n:2\r\n"[0m
+[33m[tester::#ZE9] [client-2] [0m[36mReceived RESP array: ["subscribe", "mango", 2][0m
+[33m[tester::#ZE9] [client-2] [0m[92m✔︎ Received ["subscribe", "mango", 2][0m
+[33m[tester::#ZE9] [client-3] [0m[94m$ redis-cli PUBLISH strawberry blueberry[0m
+[33m[tester::#ZE9] [client-3] [0m[36mSent bytes: "*3\r\n$7\r\nPUBLISH\r\n$10\r\nstrawberry\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#ZE9] [client-3] [0m[36mReceived bytes: ":2\r\n"[0m
+[33m[tester::#ZE9] [client-3] [0m[36mReceived RESP integer: 2[0m
+[33m[tester::#ZE9] [client-3] [0m[92m✔︎ Received 2[0m
+[33m[tester::#ZE9] [client-1] [0m[94mExpecting published message: "blueberry"[0m
+[33m[tester::#ZE9] [client-1] [0m[36mReceived bytes: "*3\r\n$7\r\nmessage\r\n$10\r\nstrawberry\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#ZE9] [client-1] [0m[36mReceived RESP array: [[0m
+[33m[tester::#ZE9] [client-1] [0m[36m  "message",[0m
+[33m[tester::#ZE9] [client-1] [0m[36m  "strawberry",[0m
+[33m[tester::#ZE9] [client-1] [0m[36m  "blueberry"[0m
+[33m[tester::#ZE9] [client-1] [0m[36m][0m
+[33m[tester::#ZE9] [client-1] [0m[92m✔︎ Received [[0m
+[33m[tester::#ZE9] [client-1] [0m[92m  "message",[0m
+[33m[tester::#ZE9] [client-1] [0m[92m  "strawberry",[0m
+[33m[tester::#ZE9] [client-1] [0m[92m  "blueberry"[0m
+[33m[tester::#ZE9] [client-1] [0m[92m][0m
+[33m[tester::#ZE9] [client-2] [0m[94mExpecting published message: "blueberry"[0m
+[33m[tester::#ZE9] [client-2] [0m[36mReceived bytes: "*3\r\n$7\r\nmessage\r\n$10\r\nstrawberry\r\n$9\r\nblueberry\r\n"[0m
+[33m[tester::#ZE9] [client-2] [0m[36mReceived RESP array: [[0m
+[33m[tester::#ZE9] [client-2] [0m[36m  "message",[0m
+[33m[tester::#ZE9] [client-2] [0m[36m  "strawberry",[0m
+[33m[tester::#ZE9] [client-2] [0m[36m  "blueberry"[0m
+[33m[tester::#ZE9] [client-2] [0m[36m][0m
+[33m[tester::#ZE9] [client-2] [0m[92m✔︎ Received [[0m
+[33m[tester::#ZE9] [client-2] [0m[92m  "message",[0m
+[33m[tester::#ZE9] [client-2] [0m[92m  "strawberry",[0m
+[33m[tester::#ZE9] [client-2] [0m[92m  "blueberry"[0m
+[33m[tester::#ZE9] [client-2] [0m[92m][0m
+[33m[tester::#ZE9] [client-1] [0m[94m> UNSUBSCRIBE strawberry[0m
+[33m[tester::#ZE9] [client-1] [0m[36mSent bytes: "*2\r\n$11\r\nUNSUBSCRIBE\r\n$10\r\nstrawberry\r\n"[0m
+[33m[tester::#ZE9] [client-1] [0m[36mReceived bytes: "*3\r\n$11\r\nunsubscribe\r\n$10\r\nstrawberry\r\n:1\r\n"[0m
+[33m[tester::#ZE9] [client-1] [0m[36mReceived RESP array: ["unsubscribe", "strawberry", 1][0m
+[33m[tester::#ZE9] [client-1] [0m[92m✔︎ Received ["unsubscribe", "strawberry", 1][0m
+[33m[tester::#ZE9] [client-3] [0m[94m> PUBLISH strawberry mango[0m
+[33m[tester::#ZE9] [client-3] [0m[36mSent bytes: "*3\r\n$7\r\nPUBLISH\r\n$10\r\nstrawberry\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#ZE9] [client-3] [0m[36mReceived bytes: ":1\r\n"[0m
+[33m[tester::#ZE9] [client-3] [0m[36mReceived RESP integer: 1[0m
+[33m[tester::#ZE9] [client-3] [0m[92m✔︎ Received 1[0m
+[33m[tester::#ZE9] [client-1] [0m[94mExpecting no response[0m
+[33m[tester::#ZE9] [client-1] [0m[92m✔︎ No response received yet[0m
+[33m[tester::#ZE9] [client-2] [0m[94mExpecting published message: "mango"[0m
+[33m[tester::#ZE9] [client-2] [0m[36mReceived bytes: "*3\r\n$7\r\nmessage\r\n$10\r\nstrawberry\r\n$5\r\nmango\r\n"[0m
+[33m[tester::#ZE9] [client-2] [0m[36mReceived RESP array: [[0m
+[33m[tester::#ZE9] [client-2] [0m[36m  "message",[0m
+[33m[tester::#ZE9] [client-2] [0m[36m  "strawberry",[0m
+[33m[tester::#ZE9] [client-2] [0m[36m  "mango"[0m
+[33m[tester::#ZE9] [client-2] [0m[36m][0m
+[33m[tester::#ZE9] [client-2] [0m[92m✔︎ Received [[0m
+[33m[tester::#ZE9] [client-2] [0m[92m  "message",[0m
+[33m[tester::#ZE9] [client-2] [0m[92m  "strawberry",[0m
+[33m[tester::#ZE9] [client-2] [0m[92m  "mango"[0m
+[33m[tester::#ZE9] [client-2] [0m[92m][0m
+[33m[tester::#ZE9] [0m[92mTest passed.[0m
+[33m[tester::#ZE9] [0m[36mTerminating program[0m
+[33m[tester::#ZE9] [0m[36mProgram terminated successfully[0m

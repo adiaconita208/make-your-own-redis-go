@@ -1,0 +1,106 @@
+package internal
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+	testerutils_random "github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
+)
+
+func testListBlpopWithTimeout(stageHarness *test_case_harness.TestCaseHarness) error {
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	if err := b.Run(); err != nil {
+		return err
+	}
+	if err := testOnlyTimeout(stageHarness); err != nil {
+		return err
+	}
+	return testPushBeforeTimeout(stageHarness)
+}
+
+func testOnlyTimeout(stageHarness *test_case_harness.TestCaseHarness) error {
+	logger := stageHarness.Logger
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+	client, err := clientsSpawner.SpawnClientWithPrefix("client")
+	if err != nil {
+		return err
+	}
+
+	randomListKey := testerutils_random.RandomWord()
+	timeoutMS := testerutils_random.RandomInt(1, 5) * 100
+	timeoutArg := fmt.Sprintf("%.1f", float32(timeoutMS)/1000)
+	timeoutDuration := time.Millisecond * time.Duration(timeoutMS)
+
+	sendCommandTestCase := test_cases.SendCommandTestCase{
+		Command:   "BLPOP",
+		Args:      []string{randomListKey, timeoutArg},
+		Assertion: resp_assertions.NewNilArrayAssertion(),
+	}
+
+	resultChan := make(chan error, 1)
+	start := time.Now()
+	go func() {
+		resultChan <- sendCommandTestCase.Run(client, logger)
+	}()
+
+	err = <-resultChan
+	end := time.Now()
+	if err != nil {
+		return err
+	}
+	if end.Before(start.Add(timeoutDuration)) {
+		return fmt.Errorf("%s received a response before timeout of %s", client.GetIdentifier(), timeoutDuration.String())
+	}
+	return nil
+}
+
+func testPushBeforeTimeout(stageHarness *test_case_harness.TestCaseHarness) error {
+	logger := stageHarness.Logger
+
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+
+	clients, err := clientsSpawner.SpawnClients(2)
+
+	if err != nil {
+		return err
+	}
+
+	listKey := testerutils_random.RandomWord()
+	pushValue := testerutils_random.RandomWord()
+	timeoutMS := testerutils_random.RandomInt(1, 5) * 100
+	timeoutArg := fmt.Sprintf("%.1f", float32(timeoutMS)/1000)
+
+	blPopResponseAssertion := resp_assertions.NewOrderedBulkStringArrayAssertion([]string{listKey, pushValue})
+
+	blockingClientGroupTestCase := test_cases.BlockingClientGroupTestCase{
+		CommandToSend:                 []string{"BLPOP", listKey, timeoutArg},
+		AssertionForReceivedResponse:  blPopResponseAssertion,
+		ResponseExpectingClientsCount: 1,
+		Clients:                       clients[0:1],
+	}
+
+	if err := blockingClientGroupTestCase.SendBlockingCommands(); err != nil {
+		return err
+	}
+
+	rpushTestCase := test_cases.SendCommandTestCase{
+		Command:   "RPUSH",
+		Args:      []string{listKey, pushValue},
+		Assertion: resp_assertions.NewIntegerAssertion(1),
+	}
+	if err := rpushTestCase.Run(clients[1], logger); err != nil {
+		return err
+	}
+
+	return blockingClientGroupTestCase.AssertResponses(logger)
+}

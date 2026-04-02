@@ -1,0 +1,58 @@
+package internal
+
+import (
+	"fmt"
+
+	"github.com/codecrafters-io/redis-tester/internal/redis_executable"
+	"github.com/codecrafters-io/redis-tester/internal/resp_assertions"
+
+	"github.com/codecrafters-io/redis-tester/internal/test_cases"
+	"github.com/codecrafters-io/tester-utils/random"
+	"github.com/codecrafters-io/tester-utils/test_case_harness"
+)
+
+func testTxSuccess(stageHarness *test_case_harness.TestCaseHarness) error {
+	b := redis_executable.NewRedisExecutable(stageHarness)
+	if err := b.Run(); err != nil {
+		return err
+	}
+
+	logger := stageHarness.Logger
+
+	clientsSpawner := ClientsSpawner{
+		Addr:         "localhost:6379",
+		StageHarness: stageHarness,
+	}
+
+	clients, err := clientsSpawner.SpawnClients(2)
+
+	if err != nil {
+		return err
+	}
+
+	uniqueKeys := random.RandomWords(2)
+	key1, key2 := uniqueKeys[0], uniqueKeys[1]
+	value := random.RandomInt(1, 100)
+
+	transactionTestCase := test_cases.TransactionTestCase{
+		CommandQueue: [][]string{
+			{"SET", key1, fmt.Sprint(value)},
+			{"INCR", key1},
+			{"INCR", key2},
+			{"GET", key2},
+		},
+		ExpectedResponseArray: []resp_assertions.RESPAssertion{resp_assertions.NewSimpleStringAssertion("OK"), resp_assertions.NewIntegerAssertion(value + 1), resp_assertions.NewIntegerAssertion(1), resp_assertions.NewBulkStringAssertion("1")},
+	}
+
+	if err := transactionTestCase.RunAll(clients[0], logger); err != nil {
+		return err
+	}
+
+	commandTestCase := test_cases.SendCommandTestCase{
+		Command:   "GET",
+		Args:      []string{key1},
+		Assertion: resp_assertions.NewBulkStringAssertion(fmt.Sprint(value + 1)),
+	}
+
+	return commandTestCase.Run(clients[1], logger)
+}
