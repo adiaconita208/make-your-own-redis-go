@@ -581,6 +581,14 @@ func handleLLen(reader *bufio.Reader, conn net.Conn, authUser *string) {
 }
 
 func handleLPop(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	if !checkAuth(authUser) {
+		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
+		if err != nil {
+			log.Printf("Writing Error: %v", err)
+		}
+		return
+	}
+
 	_, _ = reader.ReadString('\n')
 	listKey, err := reader.ReadString('\n')
 	if err != nil {
