@@ -94,6 +94,12 @@ func handleConnection(conn net.Conn) {
 		case strings.Contains(upperLine, "LPUSH"):
 			handleLPush(reader, conn, &authUser)
 
+		case strings.Contains(upperLine, "LLEN"):
+			handleLLen(reader, conn, &authUser)
+
+		case strings.Contains(upperLine, "LPOP"):
+			handleLPop(reader, conn, &authUser)
+
 		}
 	}
 }
@@ -535,6 +541,102 @@ func handleLPush(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	_, err = conn.Write([]byte(response))
 	if err != nil {
 		log.Printf("Writing Error: %v", err)
+		return
+	}
+}
+
+func handleLLen(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	if !checkAuth(authUser) {
+		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
+		if err != nil {
+			log.Printf("Writing Error: %v", err)
+		}
+		return
+	}
+
+	_, _ = reader.ReadString('\n')
+	listKey, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading list key: ", err)
+		return
+	}
+	listKey = strings.TrimSpace(listKey)
+	var response string
+	listInterface, ok := ListRegistry.Load(listKey)
+	if !ok {
+		response = ":0\r\n"
+	} else {
+		list := listInterface.(*LockableList)
+		list.Lock()
+		defer list.Unlock()
+		listLength := len(list.elements)
+		response = fmt.Sprintf(":%d\r\n", listLength)
+	}
+
+	_, err = conn.Write([]byte(response))
+	if err != nil {
+		log.Print("Writing error: ", err)
+	}
+
+}
+
+func handleLPop(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	_, _ = reader.ReadString('\n')
+	listKey, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading list key: ", err)
+		return
+	}
+	listKey = strings.TrimSpace(listKey)
+	arg := 1
+	if reader.Buffered() > 0 {
+		_, _ = reader.ReadString('\n')
+		argStr, err := reader.ReadString('\n')
+		if err != nil {
+			log.Print("Error reading argument: ", err)
+			return
+		}
+		argStr = strings.TrimPrefix(argStr, "$")
+		arg, err = strconv.Atoi(strings.TrimSpace(argStr))
+		if err != nil {
+			log.Print("Argument is not an integer: ", err)
+			return
+		}
+	}
+
+	var response string
+	listInterface, ok := ListRegistry.Load(listKey)
+	if !ok {
+		response = "$-1\r\n"
+		_, err = conn.Write([]byte(response))
+		if err != nil {
+			log.Print("Writing error: ", err)
+			return
+		}
+		return
+	}
+	list := listInterface.(*LockableList)
+	list.Lock()
+	defer list.Unlock()
+	var poppedElems []string
+	for i := 0; i < arg; i++ {
+		poppedElems = append(poppedElems, list.elements[i])
+	}
+
+	list.elements = list.elements[arg:]
+	log.Print(arg)
+	if arg == 1 {
+		response = fmt.Sprintf("$%d\r\n%s\r\n", len(poppedElems[0]), poppedElems[0])
+	} else {
+		response = fmt.Sprintf("*%d\r\n", arg)
+		for _, elem := range poppedElems {
+			elemResponse := fmt.Sprintf("$%d\r\n%s\r\n", len(elem), elem)
+			response += elemResponse
+		}
+	}
+	_, err = conn.Write([]byte(response))
+	if err != nil {
+		log.Print("Writing error: ", err)
 		return
 	}
 }
