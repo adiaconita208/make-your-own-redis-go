@@ -8,4 +8,4 @@
 set -e
 tmpFile=$(mktemp)
 go build -o "$tmpFile" ../redis-starter-go/app/*.go
-exec "$tmpFile"
+exec "$tmpFile" "$@"

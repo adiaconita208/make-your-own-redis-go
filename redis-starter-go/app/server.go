@@ -5,9 +5,11 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"flag"
 	"fmt"
 	"log"
 	"net"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -22,16 +24,30 @@ type User struct {
 type LockableList struct {
 	sync.Mutex
 	elements []string
+	clients  []chan string
 }
 
 var ServerMemory sync.Map
 var UserRegistry sync.Map
 var ListRegistry sync.Map
+var EnvVariables sync.Map
 
 func main() {
 
-	listener, err := net.Listen("tcp", ":6379")
+	fmt.Println("Full OS Args:", os.Args)
 
+	dir := flag.String("dir", "/tmp/redis-data", "File path to where RDB file is stored")
+	dbfilename := flag.String("dbfilename", "rdbfiles", "RDB File")
+
+	flag.Parse()
+
+	log.Println("dir: ", *dir)
+	log.Println("dbfilename: ", *dbfilename)
+
+	EnvVariables.Store("dir", *dir)
+	EnvVariables.Store("dbfilename", *dbfilename)
+
+	listener, err := net.Listen("tcp", ":6379")
 	if err != nil {
 		log.Fatal("Error listening: ", err)
 	}
@@ -66,40 +82,45 @@ func handleConnection(conn net.Conn) {
 
 		upperLine := strings.ToUpper(strings.TrimSpace(line))
 
-		switch {
-		case strings.Contains(upperLine, "PING"):
+		switch upperLine {
+		case "PING":
 			handlePing(reader, conn, &authUser)
 
-		case strings.Contains(upperLine, "ECHO"):
+		case "ECHO":
 			handleEcho(reader, conn, &authUser)
 
-		case strings.Contains(upperLine, "SET"):
+		case "SET":
 			handleSet(reader, conn, &authUser)
 
-		case strings.Contains(upperLine, "GET"):
+		case "GET":
 			handleGet(reader, conn, &authUser)
 
-		case strings.Contains(upperLine, "ACL"):
+		case "ACL":
 			handleACL(reader, conn, &authUser)
 
-		case strings.Contains(upperLine, "AUTH"):
+		case "AUTH":
 			handleAuth(reader, conn, &authUser)
 
-		case strings.Contains(upperLine, "RPUSH"):
+		case "RPUSH":
 			handleRPush(reader, conn, &authUser)
 
-		case strings.Contains(upperLine, "LRANGE"):
+		case "LRANGE":
 			handleLRange(reader, conn, &authUser)
 
-		case strings.Contains(upperLine, "LPUSH"):
+		case "LPUSH":
 			handleLPush(reader, conn, &authUser)
 
-		case strings.Contains(upperLine, "LLEN"):
+		case "LLEN":
 			handleLLen(reader, conn, &authUser)
 
-		case strings.Contains(upperLine, "LPOP"):
+		case "LPOP":
 			handleLPop(reader, conn, &authUser)
 
+		case "BLPOP":
+			handleBLPop(reader, conn, &authUser)
+
+		case "CONFIG":
+			handleConfigGet(reader, conn, &authUser)
 		}
 	}
 }
@@ -412,15 +433,29 @@ func handleRPush(reader *bufio.Reader, conn net.Conn, authUser *string) {
 		newElems = append(newElems, elem)
 	}
 
-	listInterface, _ := ListRegistry.LoadOrStore(listKey, &LockableList{elements: []string{}})
+	listInterface, _ := ListRegistry.LoadOrStore(listKey, &LockableList{elements: []string{}, clients: []chan string{}})
 
 	list := listInterface.(*LockableList)
 
 	list.Lock()
-	defer list.Unlock()
 
-	list.elements = append(list.elements, newElems...)
-	response := fmt.Sprintf(":%d\r\n", len(list.elements))
+	responseLen := len(list.elements) + len(newElems)
+
+	for len(list.clients) > 0 && len(newElems) > 0 {
+
+		c := list.clients[0]
+		list.clients = list.clients[1:]
+		c <- newElems[0]
+
+		newElems = newElems[1:]
+
+	}
+	if len(newElems) > 0 {
+		list.elements = append(list.elements, newElems...)
+	}
+
+	list.Unlock()
+	response := fmt.Sprintf(":%d\r\n", responseLen)
 	_, err = conn.Write([]byte(response))
 	if err != nil {
 		log.Printf("Writing Error: %v", err)
@@ -585,6 +620,7 @@ func handleLPop(reader *bufio.Reader, conn net.Conn, authUser *string) {
 		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
 		if err != nil {
 			log.Printf("Writing Error: %v", err)
+			return
 		}
 		return
 	}
@@ -596,6 +632,7 @@ func handleLPop(reader *bufio.Reader, conn net.Conn, authUser *string) {
 		return
 	}
 	listKey = strings.TrimSpace(listKey)
+
 	arg := 1
 	if reader.Buffered() > 0 {
 		_, _ = reader.ReadString('\n')
@@ -632,7 +669,6 @@ func handleLPop(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	}
 
 	list.elements = list.elements[arg:]
-	log.Print(arg)
 	if arg == 1 {
 		response = fmt.Sprintf("$%d\r\n%s\r\n", len(poppedElems[0]), poppedElems[0])
 	} else {
@@ -647,6 +683,118 @@ func handleLPop(reader *bufio.Reader, conn net.Conn, authUser *string) {
 		log.Print("Writing error: ", err)
 		return
 	}
+}
+
+func handleBLPop(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	if !checkAuth(authUser) {
+		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
+		if err != nil {
+			log.Printf("Writing Error: %v", err)
+		}
+		return
+	}
+
+	_, _ = reader.ReadString('\n')
+	listKey, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading list key: ", err)
+		return
+	}
+	listKey = strings.TrimSpace(listKey)
+
+	_, _ = reader.ReadString('\n')
+	timeoutStr, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading timeout: ", err)
+		return
+	}
+	timeout, _ := strconv.ParseFloat(strings.TrimSpace(timeoutStr), 64)
+
+	listInterface, _ := ListRegistry.LoadOrStore(listKey, &LockableList{elements: []string{}, clients: []chan string{}})
+	list := listInterface.(*LockableList)
+	list.Lock()
+	if len(list.elements) > 0 {
+		val := list.elements[0]
+		list.elements = list.elements[1:]
+		list.Unlock()
+		sendBLPOPSuccess(conn, listKey, val)
+		return
+	}
+
+	clientCh := make(chan string, 1)
+	list.clients = append(list.clients, clientCh)
+	list.Unlock()
+
+	if timeout == 0 {
+		val := <-clientCh
+		sendBLPOPSuccess(conn, listKey, val)
+		return
+	}
+
+	timeoutDuration := time.Duration(timeout * float64(time.Second))
+
+	select {
+	case val := <-clientCh:
+		sendBLPOPSuccess(conn, listKey, val)
+
+	case <-time.After(timeoutDuration):
+		list.Lock()
+
+		for i, ch := range list.clients {
+			if ch == clientCh {
+				list.clients = append(list.clients[:i], list.clients[i+1:]...)
+				break
+			}
+		}
+
+		list.Unlock()
+		_, _ = conn.Write([]byte("*-1\r\n"))
+	}
+
+}
+
+func sendBLPOPSuccess(conn net.Conn, listKey, value string) {
+	response := fmt.Sprintf("*2\r\n$%d\r\n%s\r\n$%d\r\n%s\r\n", len(listKey), listKey, len(value), value)
+	_, err := conn.Write([]byte(response))
+	if err != nil {
+		log.Print("Writing error: ", err)
+	}
+}
+
+func handleConfigGet(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	if !checkAuth(authUser) {
+		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
+		if err != nil {
+			log.Printf("Writing Error: %v", err)
+		}
+		return
+	}
+	_, _ = reader.ReadString('\n')
+	_, _ = reader.ReadString('\n')
+	_, _ = reader.ReadString('\n')
+	keyName, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading value name: ", err)
+		return
+	}
+	keyName = strings.TrimSpace(keyName)
+
+	valueInterface, ok := EnvVariables.Load(keyName)
+	if !ok {
+		log.Print("Variable not found: ", err)
+		return
+	}
+	value := valueInterface.(string)
+	log.Print(value)
+
+	response := fmt.Sprintf("*2\r\n$%d\r\n%s\r\n$%d\r\n%s\r\n", len(keyName), keyName, len(value), value)
+
+	_, err = conn.Write([]byte(response))
+	if err != nil {
+		log.Print("Writing error: ", err)
+		return
+	}
+
 }
 
 func checkAuth(authUser *string) bool {
