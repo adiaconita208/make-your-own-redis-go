@@ -47,6 +47,8 @@ func main() {
 	EnvVariables.Store("dir", *dir)
 	EnvVariables.Store("dbfilename", *dbfilename)
 
+	LoadRDB(*dir, *dbfilename)
+
 	listener, err := net.Listen("tcp", ":6379")
 	if err != nil {
 		log.Fatal("Error listening: ", err)
@@ -121,12 +123,15 @@ func handleConnection(conn net.Conn) {
 
 		case "CONFIG":
 			handleConfigGet(reader, conn, &authUser)
+
+		case "KEYS":
+			handleKeys(reader, conn, &authUser)
 		}
 	}
 }
 
 func handlePing(reader *bufio.Reader, conn net.Conn, authUser *string) {
-	if !checkAuth(authUser) {
+	if !CheckAuth(authUser) {
 		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
 		if err != nil {
 			log.Printf("Writing Error: %v", err)
@@ -142,7 +147,7 @@ func handlePing(reader *bufio.Reader, conn net.Conn, authUser *string) {
 }
 
 func handleEcho(reader *bufio.Reader, conn net.Conn, authUser *string) {
-	if !checkAuth(authUser) {
+	if !CheckAuth(authUser) {
 		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
 		if err != nil {
 			log.Printf("Writing Error: %v", err)
@@ -165,7 +170,7 @@ func handleEcho(reader *bufio.Reader, conn net.Conn, authUser *string) {
 }
 
 func handleSet(reader *bufio.Reader, conn net.Conn, authUser *string) {
-	if !checkAuth(authUser) {
+	if !CheckAuth(authUser) {
 		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
 		if err != nil {
 			log.Printf("Writing Error: %v", err)
@@ -220,7 +225,7 @@ func handleSet(reader *bufio.Reader, conn net.Conn, authUser *string) {
 }
 
 func handleGet(reader *bufio.Reader, conn net.Conn, authUser *string) {
-	if !checkAuth(authUser) {
+	if !CheckAuth(authUser) {
 		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
 		if err != nil {
 			log.Printf("Writing Error: %v", err)
@@ -260,7 +265,7 @@ func handleGet(reader *bufio.Reader, conn net.Conn, authUser *string) {
 }
 
 func handleACL(reader *bufio.Reader, conn net.Conn, authUser *string) {
-	if !checkAuth(authUser) {
+	if !CheckAuth(authUser) {
 		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
 		if err != nil {
 			log.Printf("Writing Error: %v", err)
@@ -405,7 +410,7 @@ func handleAuth(reader *bufio.Reader, conn net.Conn, authUser *string) {
 }
 
 func handleRPush(reader *bufio.Reader, conn net.Conn, authUser *string) {
-	if !checkAuth(authUser) {
+	if !CheckAuth(authUser) {
 		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
 		if err != nil {
 			log.Printf("Writing Error: %v", err)
@@ -465,7 +470,7 @@ func handleRPush(reader *bufio.Reader, conn net.Conn, authUser *string) {
 }
 
 func handleLRange(reader *bufio.Reader, conn net.Conn, authUser *string) {
-	if !checkAuth(authUser) {
+	if !CheckAuth(authUser) {
 		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
 		if err != nil {
 			log.Printf("Writing Error: %v", err)
@@ -535,7 +540,7 @@ func handleLRange(reader *bufio.Reader, conn net.Conn, authUser *string) {
 }
 
 func handleLPush(reader *bufio.Reader, conn net.Conn, authUser *string) {
-	if !checkAuth(authUser) {
+	if !CheckAuth(authUser) {
 		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
 		if err != nil {
 			log.Printf("Writing Error: %v", err)
@@ -581,7 +586,7 @@ func handleLPush(reader *bufio.Reader, conn net.Conn, authUser *string) {
 }
 
 func handleLLen(reader *bufio.Reader, conn net.Conn, authUser *string) {
-	if !checkAuth(authUser) {
+	if !CheckAuth(authUser) {
 		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
 		if err != nil {
 			log.Printf("Writing Error: %v", err)
@@ -616,7 +621,7 @@ func handleLLen(reader *bufio.Reader, conn net.Conn, authUser *string) {
 }
 
 func handleLPop(reader *bufio.Reader, conn net.Conn, authUser *string) {
-	if !checkAuth(authUser) {
+	if !CheckAuth(authUser) {
 		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
 		if err != nil {
 			log.Printf("Writing Error: %v", err)
@@ -686,7 +691,7 @@ func handleLPop(reader *bufio.Reader, conn net.Conn, authUser *string) {
 }
 
 func handleBLPop(reader *bufio.Reader, conn net.Conn, authUser *string) {
-	if !checkAuth(authUser) {
+	if !CheckAuth(authUser) {
 		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
 		if err != nil {
 			log.Printf("Writing Error: %v", err)
@@ -717,7 +722,7 @@ func handleBLPop(reader *bufio.Reader, conn net.Conn, authUser *string) {
 		val := list.elements[0]
 		list.elements = list.elements[1:]
 		list.Unlock()
-		sendBLPOPSuccess(conn, listKey, val)
+		SendBLPOPSuccess(conn, listKey, val)
 		return
 	}
 
@@ -727,7 +732,7 @@ func handleBLPop(reader *bufio.Reader, conn net.Conn, authUser *string) {
 
 	if timeout == 0 {
 		val := <-clientCh
-		sendBLPOPSuccess(conn, listKey, val)
+		SendBLPOPSuccess(conn, listKey, val)
 		return
 	}
 
@@ -735,7 +740,7 @@ func handleBLPop(reader *bufio.Reader, conn net.Conn, authUser *string) {
 
 	select {
 	case val := <-clientCh:
-		sendBLPOPSuccess(conn, listKey, val)
+		SendBLPOPSuccess(conn, listKey, val)
 
 	case <-time.After(timeoutDuration):
 		list.Lock()
@@ -753,16 +758,8 @@ func handleBLPop(reader *bufio.Reader, conn net.Conn, authUser *string) {
 
 }
 
-func sendBLPOPSuccess(conn net.Conn, listKey, value string) {
-	response := fmt.Sprintf("*2\r\n$%d\r\n%s\r\n$%d\r\n%s\r\n", len(listKey), listKey, len(value), value)
-	_, err := conn.Write([]byte(response))
-	if err != nil {
-		log.Print("Writing error: ", err)
-	}
-}
-
 func handleConfigGet(reader *bufio.Reader, conn net.Conn, authUser *string) {
-	if !checkAuth(authUser) {
+	if !CheckAuth(authUser) {
 		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
 		if err != nil {
 			log.Printf("Writing Error: %v", err)
@@ -797,6 +794,34 @@ func handleConfigGet(reader *bufio.Reader, conn net.Conn, authUser *string) {
 
 }
 
-func checkAuth(authUser *string) bool {
-	return *authUser != ""
+func handleKeys(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	_, _ = reader.ReadString('\n')
+	pattern, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading the pattern", err)
+	}
+	pattern = strings.TrimSpace(pattern)
+
+	if pattern != "*" {
+		_, _ = conn.Write([]byte("-ERR only * pattern is supported\r\n"))
+		return
+	}
+
+	var keys []string
+
+	ServerMemory.Range(func(key, value any) bool {
+		keys = append(keys, key.(string))
+		return true
+	})
+
+	response := fmt.Sprintf("*%d\r\n", len(keys))
+	for _, key := range keys {
+		response += fmt.Sprintf("$%d\r\n%s\r\n", len(key), key)
+	}
+
+	_, err = conn.Write([]byte(response))
+	if err != nil {
+		log.Print("Error writing: ", err)
+		return
+	}
 }
