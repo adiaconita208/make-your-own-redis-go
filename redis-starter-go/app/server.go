@@ -26,6 +26,7 @@ var ServerMemory sync.Map
 var UserRegistry sync.Map
 var ListRegistry sync.Map
 var EnvVariables sync.Map
+var ServerInfo sync.Map
 
 func main() {
 
@@ -33,18 +34,24 @@ func main() {
 
 	dir := flag.String("dir", "/tmp/redis-data", "File path to where RDB file is stored")
 	dbfilename := flag.String("dbfilename", "rdbfiles", "RDB File")
+	port := flag.Int("port", 6379, "The port the server will run on")
+	replicaof := flag.String("replicaof", "master", "The server the replica is connected to")
 
 	flag.Parse()
 
 	log.Println("dir: ", *dir)
 	log.Println("dbfilename: ", *dbfilename)
+	log.Println("port: ", *port)
+	log.Println("replicaof: ", *replicaof)
 
 	EnvVariables.Store("dir", *dir)
 	EnvVariables.Store("dbfilename", *dbfilename)
 
 	LoadRDB(*dir, *dbfilename)
 
-	listener, err := net.Listen("tcp", ":6379")
+	strPort := fmt.Sprintf(":%d", *port)
+
+	listener, err := net.Listen("tcp", strPort)
 	if err != nil {
 		log.Fatal("Error listening: ", err)
 	}
@@ -52,6 +59,18 @@ func main() {
 	defer listener.Close()
 
 	UserRegistry.Store("default", &User{Flags: []string{"nopass"}})
+
+	if *replicaof != "master" {
+		ServerInfo.Store("role", "slave")
+		replicaofSlice := strings.Split(*replicaof, " ")
+		masterHost := replicaofSlice[0]
+		masterPort := replicaofSlice[1]
+		ConnectToMaster(masterHost, masterPort)
+	} else {
+		ServerInfo.Store("role", "master")
+		ServerInfo.Store("master_replid", RandomString(40))
+		ServerInfo.Store("master_repl_offset", "0")
+	}
 
 	for {
 		conn, err := listener.Accept()
@@ -121,6 +140,9 @@ func handleConnection(conn net.Conn) {
 
 		case "KEYS":
 			HandleKeys(reader, conn, &authUser)
+
+		case "INFO":
+			HandleInfo(reader, conn, &authUser)
 		}
 	}
 }

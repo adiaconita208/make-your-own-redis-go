@@ -678,6 +678,15 @@ func HandleConfigGet(reader *bufio.Reader, conn net.Conn, authUser *string) {
 }
 
 func HandleKeys(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	if !CheckAuth(authUser) {
+		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
+		if err != nil {
+			log.Printf("Writing Error: %v", err)
+			return
+		}
+		return
+	}
+
 	_, _ = reader.ReadString('\n')
 	pattern, err := reader.ReadString('\n')
 	if err != nil {
@@ -706,5 +715,54 @@ func HandleKeys(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	if err != nil {
 		log.Print("Error writing: ", err)
 		return
+	}
+}
+
+func HandleInfo(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	if !CheckAuth(authUser) {
+		_, err := conn.Write([]byte("-NOAUTH Authentication required.\r\n"))
+		if err != nil {
+			log.Printf("Writing Error: %v", err)
+			return
+		}
+		return
+	}
+
+	_, _ = reader.ReadString('\n')
+	arg, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading command argument: ", err)
+		return
+	}
+	arg = strings.ToUpper(strings.TrimSpace(arg))
+
+	switch arg {
+	case "REPLICATION":
+		serverRoleInterface, _ := ServerInfo.Load("role")
+		serverRole := serverRoleInterface.(string)
+		roleLine := "role:" + serverRole
+
+		var response string
+
+		if serverRole == "master" {
+			replidInterface, _ := ServerInfo.Load("master_replid")
+			offsetInterface, _ := ServerInfo.Load("master_repl_offset")
+
+			replid := replidInterface.(string)
+			offset := offsetInterface.(string)
+
+			replidLine := "master_replid:" + replid
+			offsetLine := "master_repl_offset:" + offset
+
+			content := fmt.Sprintf("%s\n%s\n%s\n", roleLine, replidLine, offsetLine)
+			response = fmt.Sprintf("$%d\r\n%s\r\n", len(content), content)
+		} else {
+			response = fmt.Sprintf("$%d\r\n%s\r\n", len(roleLine), roleLine)
+		}
+
+		_, err := conn.Write([]byte(response))
+		if err != nil {
+			log.Print("Writing error: ", err)
+		}
 	}
 }
