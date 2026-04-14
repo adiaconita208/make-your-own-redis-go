@@ -23,11 +23,21 @@ type LockableList struct {
 	clients  []chan string
 }
 
+type SilentConn struct {
+	net.Conn
+}
+
+func (s SilentConn) Write(b []byte) (int, error) {
+	return len(b), nil
+}
+
 var ServerMemory sync.Map
 var UserRegistry sync.Map
 var ListRegistry sync.Map
 var EnvVariables sync.Map
 var ServerInfo sync.Map
+var Replicas []net.Conn
+var ReplicasMu sync.Mutex
 
 func main() {
 
@@ -87,11 +97,15 @@ func main() {
 
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
+	reader := bufio.NewReader(conn)
+	serveCommands(conn, reader)
+}
+
+func serveCommands(conn net.Conn, reader *bufio.Reader) {
 	var authUser string
 	if defUser, _ := UserRegistry.Load("default"); len(defUser.(*User).Passwords) == 0 {
 		authUser = "default"
 	}
-	reader := bufio.NewReader(conn)
 	for {
 		line, err := reader.ReadString('\n')
 		if err != nil {

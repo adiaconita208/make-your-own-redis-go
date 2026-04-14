@@ -50,3 +50,23 @@ func ConnectToMaster(masterHost, masterPort, replicaPort string) {
 	HandleReplConfSlave(masterConn, reader, replicaPort)
 	HandlePsyncSlave(masterConn, reader)
 }
+
+func PropagateCommand(args ...string) {
+	ReplicasMu.Lock()
+	defer ReplicasMu.Unlock()
+
+	if len(Replicas) == 0 {
+		return
+	}
+
+	resp := fmt.Sprintf("*%d\r\n", len(args))
+	for _, arg := range args {
+		resp += fmt.Sprintf("$%d\r\n%s\r\n", len(arg), arg)
+	}
+	for _, conn := range Replicas {
+		_, err := conn.Write([]byte(resp))
+		if err != nil {
+			log.Printf("Error propagating to replica %s: %s", conn, err)
+		}
+	}
+}

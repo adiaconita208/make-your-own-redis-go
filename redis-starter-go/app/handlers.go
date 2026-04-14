@@ -6,6 +6,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"strconv"
@@ -76,6 +77,10 @@ func HandleSet(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	}
 	value = strings.TrimSpace(value)
 	ServerMemory.Store(key, value)
+
+	if role, _ := ServerInfo.Load("role"); role == "master" {
+		PropagateCommand("SET", key, value)
+	}
 
 	_, err = conn.Write([]byte("+OK\r\n"))
 
@@ -822,6 +827,15 @@ func HandlePsyncSlave(conn net.Conn, reader *bufio.Reader) {
 	}
 
 	_, _ = reader.ReadString('\n')
+
+	lengthLine, _ := reader.ReadString('\n')
+	lengthLine = strings.TrimSpace(strings.TrimPrefix(lengthLine, "$"))
+	length, _ := strconv.Atoi(lengthLine)
+
+	rdbBytes := make([]byte, length)
+	_, _ = io.ReadFull(reader, rdbBytes)
+
+	go serveCommands(SilentConn{conn}, reader)
 }
 
 func HandlePsyncMaster(reader *bufio.Reader, conn net.Conn, authUser *string) {
@@ -831,6 +845,11 @@ func HandlePsyncMaster(reader *bufio.Reader, conn net.Conn, authUser *string) {
 		return
 	}
 
+	_, _ = reader.ReadString('\n')
+	_, _ = reader.ReadString('\n')
+	_, _ = reader.ReadString('\n')
+	_, _ = reader.ReadString('\n')
+
 	replicationIdInterface, _ := ServerInfo.Load("master_replid")
 	replicationId := replicationIdInterface.(string)
 
@@ -839,5 +858,30 @@ func HandlePsyncMaster(reader *bufio.Reader, conn net.Conn, authUser *string) {
 
 	response := fmt.Sprintf("+FULLRESYNC %s %s\r\n", replicationId, replicationOffset)
 
-	conn.Write([]byte(response))
+	_, err := conn.Write([]byte(response))
+	if err != nil {
+		log.Print("Error writing FULLRESYNC: ", err)
+		return
+	}
+
+	emptyRdbHex := "524544495330303131fa0972656469732d76657205372e322e30fa0a72656469732d62697473c040fa056374696d65c26d08bc65fa08757365642d6d656dc2b0c41000fa08616f662d62617365c000fff06e3bfec0ff5aa2"
+	rdbBytes, err := hex.DecodeString(emptyRdbHex)
+	if err != nil {
+		log.Print("Error decoding RDB hex: ", err)
+		return
+	}
+
+	rdbHeader := fmt.Sprintf("$%d\r\n", len(rdbBytes))
+
+	fullPayload := append([]byte(rdbHeader), rdbBytes...)
+
+	_, err = conn.Write(fullPayload)
+	if err != nil {
+		log.Print("Error writing RDB file to replica: ", err)
+		return
+	}
+
+	ReplicasMu.Lock()
+	Replicas = append(Replicas, conn)
+	ReplicasMu.Unlock()
 }
