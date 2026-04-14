@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"math/rand"
@@ -29,15 +30,23 @@ func RandomString(length int) string {
 	return string(b)
 }
 
-func ConnectToMaster(masterHost, masterPort string) {
+func ConnectToMaster(masterHost, masterPort, replicaPort string) {
 	masterConn, err := net.Dial("tcp", masterHost+":"+masterPort)
 	if err != nil {
 		log.Fatal("Error connecting to master: ", err)
 		return
 	}
+
+	reader := bufio.NewReader(masterConn)
+
 	_, err = masterConn.Write([]byte("*1\r\n$4\r\nPING\r\n"))
 	if err != nil {
 		log.Print("Error sending PING to master: ", err)
 		return
 	}
+
+	_, _ = reader.ReadString('\n')
+
+	HandleReplConfSlave(masterConn, reader, replicaPort)
+	HandlePsyncSlave(masterConn, reader)
 }

@@ -766,3 +766,78 @@ func HandleInfo(reader *bufio.Reader, conn net.Conn, authUser *string) {
 		}
 	}
 }
+
+func HandleReplConfSlave(conn net.Conn, reader *bufio.Reader, replicaPort string) {
+	portCmd := fmt.Sprintf("*3\r\n$8\r\nREPLCONF\r\n$14\r\nlistening-port\r\n$%d\r\n%s\r\n", len(replicaPort), replicaPort)
+	_, err := conn.Write([]byte(portCmd))
+	if err != nil {
+		log.Print("Error writing to master", err)
+		return
+	}
+
+	_, _ = reader.ReadString('\n')
+
+	_, err = conn.Write([]byte("*3\r\n$8\r\nREPLCONF\r\n$4\r\ncapa\r\n$6\r\npsync2\r\n"))
+	if err != nil {
+		log.Print("Error writing to master", err)
+		return
+	}
+
+	_, _ = reader.ReadString('\n')
+}
+
+func HandleReplConfMaster(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	serverRoleInterface, _ := ServerInfo.Load("role")
+	serverRole := serverRoleInterface.(string)
+	if serverRole != "master" {
+		return
+	}
+	_, _ = reader.ReadString('\n')
+	command, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading REPLCONF subcommand: ", err)
+		return
+	}
+	command = strings.TrimSpace(command)
+	_, _ = reader.ReadString('\n')
+	_, _ = reader.ReadString('\n')
+
+	if command != "listening-port" && command != "capa" {
+		log.Print("Unrecognized command: ", command)
+		return
+	}
+	_, err = conn.Write([]byte("+OK\r\n"))
+	if err != nil {
+		log.Print("Error writing to slave: ", err)
+		return
+	}
+}
+
+func HandlePsyncSlave(conn net.Conn, reader *bufio.Reader) {
+	_, err := conn.Write([]byte("*3\r\n$5\r\nPSYNC\r\n$1\r\n?\r\n$2\r\n-1\r\n"))
+
+	if err != nil {
+		log.Print("Error writing to master server: ", err)
+		return
+	}
+
+	_, _ = reader.ReadString('\n')
+}
+
+func HandlePsyncMaster(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	serverRoleInterface, _ := ServerInfo.Load("role")
+	serverRole := serverRoleInterface.(string)
+	if serverRole != "master" {
+		return
+	}
+
+	replicationIdInterface, _ := ServerInfo.Load("master_replid")
+	replicationId := replicationIdInterface.(string)
+
+	replicationOffsetInterface, _ := ServerInfo.Load("master_repl_offset")
+	replicationOffset := replicationOffsetInterface.(string)
+
+	response := fmt.Sprintf("+FULLRESYNC %s %s\r\n", replicationId, replicationOffset)
+
+	conn.Write([]byte(response))
+}

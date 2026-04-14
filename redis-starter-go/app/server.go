@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
 )
@@ -49,9 +50,9 @@ func main() {
 
 	LoadRDB(*dir, *dbfilename)
 
-	strPort := fmt.Sprintf(":%d", *port)
+	strPort := strconv.Itoa(*port)
 
-	listener, err := net.Listen("tcp", strPort)
+	listener, err := net.Listen("tcp", ":"+strPort)
 	if err != nil {
 		log.Fatal("Error listening: ", err)
 	}
@@ -65,7 +66,9 @@ func main() {
 		replicaofSlice := strings.Split(*replicaof, " ")
 		masterHost := replicaofSlice[0]
 		masterPort := replicaofSlice[1]
-		ConnectToMaster(masterHost, masterPort)
+		ServerInfo.Store("masterHost", masterHost)
+		ServerInfo.Store("masterPort", masterPort)
+		ConnectToMaster(masterHost, masterPort, strPort)
 	} else {
 		ServerInfo.Store("role", "master")
 		ServerInfo.Store("master_replid", RandomString(40))
@@ -143,6 +146,13 @@ func handleConnection(conn net.Conn) {
 
 		case "INFO":
 			HandleInfo(reader, conn, &authUser)
+
+		case "REPLCONF":
+			HandleReplConfMaster(reader, conn, &authUser)
+
+		case "PSYNC":
+			HandlePsyncMaster(reader, conn, &authUser)
 		}
+
 	}
 }
