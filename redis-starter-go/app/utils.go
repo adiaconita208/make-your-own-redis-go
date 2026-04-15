@@ -70,3 +70,13 @@ func PropagateCommand(args ...string) {
 		}
 	}
 }
+
+func OffsetByteSize(args ...string) int {
+	size := len(fmt.Sprintf("*%d\r\n", len(args)))
+
+	for _, arg := range args {
+		size += len(fmt.Sprintf("$%d\r\n%s\r\n", len(arg), arg))
+	}
+
+	return size
+}

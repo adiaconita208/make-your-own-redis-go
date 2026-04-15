@@ -162,7 +162,7 @@ func serveCommands(conn net.Conn, reader *bufio.Reader) {
 			HandleInfo(reader, conn, &authUser)
 
 		case "REPLCONF":
-			HandleReplConfMaster(reader, conn, &authUser)
+			HandleReplConf(reader, conn, &authUser)
 
 		case "PSYNC":
 			HandlePsyncMaster(reader, conn, &authUser)

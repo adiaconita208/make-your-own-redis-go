@@ -28,6 +28,13 @@ func HandlePing(reader *bufio.Reader, conn net.Conn, authUser *string) {
 		log.Printf("Write error: %v", err)
 		return
 	}
+
+	if role, _ := ServerInfo.Load("role"); role == "slave" {
+		offsetInterface, _ := ServerInfo.Load("repl_offset")
+		offset := offsetInterface.(int)
+
+		ServerInfo.Store("repl_offset", offset+OffsetByteSize("PING"))
+	}
 }
 
 func HandleEcho(reader *bufio.Reader, conn net.Conn, authUser *string) {
@@ -77,6 +84,14 @@ func HandleSet(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	}
 	value = strings.TrimSpace(value)
 	ServerMemory.Store(key, value)
+
+	if role, _ := ServerInfo.Load("role"); role == "slave" {
+		offsetInterface, _ := ServerInfo.Load("repl_offset")
+		offset := offsetInterface.(int)
+
+		size := OffsetByteSize("SET", key, value)
+		ServerInfo.Store("repl_offset", offset+size)
+	}
 
 	if role, _ := ServerInfo.Load("role"); role == "master" {
 		PropagateCommand("SET", key, value)
@@ -791,30 +806,76 @@ func HandleReplConfSlave(conn net.Conn, reader *bufio.Reader, replicaPort string
 	_, _ = reader.ReadString('\n')
 }
 
-func HandleReplConfMaster(reader *bufio.Reader, conn net.Conn, authUser *string) {
-	serverRoleInterface, _ := ServerInfo.Load("role")
-	serverRole := serverRoleInterface.(string)
-	if serverRole != "master" {
-		return
-	}
+// func HandleReplConfMaster(reader *bufio.Reader, conn net.Conn, authUser *string) {
+// 	serverRoleInterface, _ := ServerInfo.Load("role")
+// 	serverRole := serverRoleInterface.(string)
+// 	if serverRole != "master" {
+// 		return
+// 	}
+// 	_, _ = reader.ReadString('\n')
+// 	command, err := reader.ReadString('\n')
+// 	if err != nil {
+// 		log.Print("Error reading REPLCONF subcommand: ", err)
+// 		return
+// 	}
+// 	command = strings.TrimSpace(command)
+// 	_, _ = reader.ReadString('\n')
+// 	_, _ = reader.ReadString('\n')
+
+// 	if command != "listening-port" && command != "capa" {
+// 		log.Print("Unrecognized command: ", command)
+// 		return
+// 	}
+// 	_, err = conn.Write([]byte("+OK\r\n"))
+// 	if err != nil {
+// 		log.Print("Error writing to slave: ", err)
+// 		return
+// 	}
+// }
+
+func HandleReplConf(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	_, _ = reader.ReadString('\n')
 	command, err := reader.ReadString('\n')
 	if err != nil {
-		log.Print("Error reading REPLCONF subcommand: ", err)
-		return
+		log.Print("Error reading the REPLCONF subcommand", err)
 	}
-	command = strings.TrimSpace(command)
+
+	command = strings.ToUpper(strings.TrimSpace(command))
+
 	_, _ = reader.ReadString('\n')
 	_, _ = reader.ReadString('\n')
 
-	if command != "listening-port" && command != "capa" {
-		log.Print("Unrecognized command: ", command)
+	// Handler for the slave server
+	if command == "GETACK" {
+
+		offsetInterface, _ := ServerInfo.Load("repl_offset")
+		offset := offsetInterface.(int)
+		offsetStr := strconv.Itoa(offset)
+
+		response := fmt.Sprintf("*3\r\n$8\r\nREPLCONF\r\n$3\r\nACK\r\n$%d\r\n%s\r\n", len(offsetStr), offsetStr)
+		if silentConn, ok := conn.(SilentConn); ok {
+			_, _ = silentConn.Conn.Write([]byte(response))
+		} else {
+			_, _ = conn.Write([]byte(response))
+		}
+
+		ServerInfo.Store("repl_offset", offset+37)
 		return
 	}
-	_, err = conn.Write([]byte("+OK\r\n"))
-	if err != nil {
-		log.Print("Error writing to slave: ", err)
-		return
+
+	// Handler for the master server
+	roleInterface, _ := ServerInfo.Load("role")
+	role := roleInterface.(string)
+	if role == "master" {
+		if command == "LISTENING-PORT" || command == "CAPA" {
+			_, err := conn.Write([]byte("+OK\r\n"))
+			if err != nil {
+				log.Print("Error writing to slave: ", err)
+				return
+			}
+		} else {
+			log.Print("Unrecognized subcommand: ", command)
+		}
 	}
 }
 
@@ -834,6 +895,8 @@ func HandlePsyncSlave(conn net.Conn, reader *bufio.Reader) {
 
 	rdbBytes := make([]byte, length)
 	_, _ = io.ReadFull(reader, rdbBytes)
+
+	ServerInfo.Store("repl_offset", 0)
 
 	go serveCommands(SilentConn{conn}, reader)
 }
