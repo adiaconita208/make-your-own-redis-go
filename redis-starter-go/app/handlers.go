@@ -1345,6 +1345,7 @@ func HandleZRem(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	sortedSet := sortedSetInterface.(*SortedSet)
 
 	sortedSet.Lock()
+	defer sortedSet.Unlock()
 	_, exists = sortedSet.Elements[elementKey]
 	if !exists {
 		_, err := conn.Write([]byte(":0\r\n"))
@@ -1363,7 +1364,6 @@ func HandleZRem(reader *bufio.Reader, conn net.Conn, authUser *string) {
 			break
 		}
 	}
-	sortedSet.Unlock()
 
 	_, err = conn.Write([]byte(":1\r\n"))
 	if err != nil {
