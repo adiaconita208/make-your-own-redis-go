@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"os"
@@ -23,6 +24,11 @@ type LockableList struct {
 	clients  []chan string
 }
 
+type Replica struct {
+	Conn   net.Conn
+	Offset int
+}
+
 type SilentConn struct {
 	net.Conn
 }
@@ -36,8 +42,9 @@ var UserRegistry sync.Map
 var ListRegistry sync.Map
 var EnvVariables sync.Map
 var ServerInfo sync.Map
-var Replicas []net.Conn
+var Replicas []*Replica
 var ReplicasMu sync.Mutex
+var MasterOffset int
 
 func main() {
 
@@ -109,7 +116,10 @@ func serveCommands(conn net.Conn, reader *bufio.Reader) {
 	for {
 		line, err := reader.ReadString('\n')
 		if err != nil {
-			log.Printf("Read error: %v", err)
+			if err == io.EOF {
+				return
+			}
+			log.Printf("Error reading main command: %v", err)
 			continue
 		}
 
@@ -166,6 +176,9 @@ func serveCommands(conn net.Conn, reader *bufio.Reader) {
 
 		case "PSYNC":
 			HandlePsyncMaster(reader, conn, &authUser)
+
+		case "WAIT":
+			HandleWait(reader, conn, &authUser)
 		}
 
 	}

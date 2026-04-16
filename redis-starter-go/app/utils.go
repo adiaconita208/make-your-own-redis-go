@@ -63,8 +63,11 @@ func PropagateCommand(args ...string) {
 	for _, arg := range args {
 		resp += fmt.Sprintf("$%d\r\n%s\r\n", len(arg), arg)
 	}
+
+	MasterOffset += len(resp)
+
 	for _, conn := range Replicas {
-		_, err := conn.Write([]byte(resp))
+		_, err := conn.Conn.Write([]byte(resp))
 		if err != nil {
 			log.Printf("Error propagating to replica %s: %s", conn, err)
 		}

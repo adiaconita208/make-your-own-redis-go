@@ -48,7 +48,7 @@ func HandleEcho(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	_, _ = reader.ReadString('\n')
 	content, err := reader.ReadString('\n')
 	if err != nil {
-		log.Printf("Read error: %v", err)
+		log.Printf("Error reading echo content: %v", err)
 		return
 	}
 	content = strings.TrimSpace(content)
@@ -843,7 +843,11 @@ func HandleReplConf(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	command = strings.ToUpper(strings.TrimSpace(command))
 
 	_, _ = reader.ReadString('\n')
-	_, _ = reader.ReadString('\n')
+	val, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading the REPLCONF offset", err)
+	}
+	val = strings.TrimSpace(val)
 
 	// Handler for the slave server
 	if command == "GETACK" {
@@ -873,8 +877,17 @@ func HandleReplConf(reader *bufio.Reader, conn net.Conn, authUser *string) {
 				log.Print("Error writing to slave: ", err)
 				return
 			}
-		} else {
-			log.Print("Unrecognized subcommand: ", command)
+		} else if command == "ACK" {
+			offset, _ := strconv.Atoi(val)
+
+			ReplicasMu.Lock()
+			for i, r := range Replicas {
+				if r.Conn == conn {
+					Replicas[i].Offset = offset
+					break
+				}
+			}
+			ReplicasMu.Unlock()
 		}
 	}
 }
@@ -945,6 +958,92 @@ func HandlePsyncMaster(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	}
 
 	ReplicasMu.Lock()
-	Replicas = append(Replicas, conn)
+	Replicas = append(Replicas, &Replica{Conn: conn, Offset: 0})
 	ReplicasMu.Unlock()
+}
+
+func HandleWait(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	_, _ = reader.ReadString('\n')
+	numreplicasStr, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading number of replicas: ", err)
+		return
+	}
+	numreplicasStr = strings.TrimSpace(numreplicasStr)
+	numreplicas, _ := strconv.Atoi(numreplicasStr)
+
+	_, _ = reader.ReadString('\n')
+	timeoutStr, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading number of replicas: ", err)
+		return
+	}
+	timeoutStr = strings.TrimSpace(timeoutStr)
+	timeout, _ := strconv.Atoi(timeoutStr)
+
+	ReplicasMu.Lock()
+	connectedReplicas := len(Replicas)
+	ReplicasMu.Unlock()
+
+	if connectedReplicas == 0 || MasterOffset == 0 {
+		_, err = conn.Write([]byte(fmt.Sprintf(":%d\r\n", connectedReplicas)))
+		if err != nil {
+			log.Print("Error writing: ", err)
+			return
+		}
+
+		return
+	}
+
+	getAckCommand := "*3\r\n$8\r\nREPLCONF\r\n$6\r\nGETACK\r\n$1\r\n*\r\n"
+	ReplicasMu.Lock()
+	for _, replica := range Replicas {
+		_, _ = replica.Conn.Write([]byte(getAckCommand))
+	}
+	ReplicasMu.Unlock()
+
+	timeoutMs := time.Duration(timeout) * time.Millisecond
+
+	var ctx context.Context
+	var cancel context.CancelFunc
+
+	if timeout > 0 {
+		ctx, cancel = context.WithTimeout(context.Background(), timeoutMs)
+		defer cancel()
+	} else {
+		ctx = context.Background()
+	}
+
+	ticker := time.NewTicker(50 * time.Millisecond)
+	defer ticker.Stop()
+
+	acked := 0
+
+WAIT_LOOP:
+	for {
+		acked = 0
+		ReplicasMu.Lock()
+		for _, r := range Replicas {
+			if r.Offset >= MasterOffset {
+				acked++
+			}
+		}
+		ReplicasMu.Unlock()
+
+		if acked >= numreplicas {
+			break WAIT_LOOP
+		}
+
+		select {
+		case <-ctx.Done():
+			break WAIT_LOOP
+		case <-ticker.C:
+		}
+	}
+
+	_, err = conn.Write([]byte(fmt.Sprintf(":%d\r\n", acked)))
+	if err != nil {
+		log.Print("Error writing to server: ", err)
+	}
+
 }
