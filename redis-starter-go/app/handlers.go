@@ -1217,13 +1217,144 @@ func HandleZRange(reader *bufio.Reader, conn net.Conn, authUser *string) {
 
 	index2 = min(index2, len(sortedSet.Elements)-1)
 
-	response := fmt.Sprintf("*%d\r\n", index2-index1+1)
+	var response strings.Builder
+	response.WriteString(fmt.Sprintf("*%d\r\n", index2-index1+1))
 
 	for i := index1; i <= index2; i++ {
-		response += fmt.Sprintf("$%d\r\n%s\r\n", len(sortedSet.Order[i].Name), sortedSet.Order[i].Name)
+		response.WriteString(fmt.Sprintf("$%d\r\n%s\r\n", len(sortedSet.Order[i].Name), sortedSet.Order[i].Name))
 	}
 
-	_, err = conn.Write([]byte(response))
+	_, err = conn.Write([]byte(response.String()))
+	if err != nil {
+		log.Print("Writing Error: ", err)
+		return
+	}
+
+}
+
+func HandleZCard(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	_, _ = reader.ReadString('\n')
+	setKey, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading set key: ", err)
+		return
+	}
+	setKey = strings.TrimSpace(setKey)
+
+	sortedSetInterface, exists := ZSetRegistry.Load(setKey)
+	if !exists {
+		_, err := conn.Write([]byte(":0\r\n"))
+		if err != nil {
+			log.Print("Writing Error: ", err)
+			return
+		}
+		return
+	}
+	sortedSet := sortedSetInterface.(*SortedSet)
+
+	_, err = conn.Write([]byte(fmt.Sprintf(":%d\r\n", len(sortedSet.Elements))))
+	if err != nil {
+		log.Print("Writing Error: ", err)
+		return
+	}
+}
+
+func HandleZScore(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	_, _ = reader.ReadString('\n')
+	setKey, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading set key: ", err)
+		return
+	}
+	setKey = strings.TrimSpace(setKey)
+
+	_, _ = reader.ReadString('\n')
+	elementKey, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading element key: ", err)
+		return
+	}
+	elementKey = strings.TrimSpace(elementKey)
+
+	sortedSetInterface, exists := ZSetRegistry.Load(setKey)
+	if !exists {
+		_, err := conn.Write([]byte("-1\r\n"))
+		if err != nil {
+			log.Print("Writing Error: ", err)
+			return
+		}
+		return
+	}
+	sortedSet := sortedSetInterface.(*SortedSet)
+
+	element, exists := sortedSet.Elements[elementKey]
+	if !exists {
+		_, err := conn.Write([]byte("$-1\r\n"))
+		if err != nil {
+			log.Print("Writing Error: ", err)
+			return
+		}
+		return
+	}
+
+	scoreStr := strconv.FormatFloat(element, 'f', -1, 64)
+
+	_, err = conn.Write([]byte(fmt.Sprintf("$%d\r\n%s\r\n", len(scoreStr), scoreStr)))
+	if err != nil {
+		log.Print("Writing Error: ", err)
+		return
+	}
+
+}
+
+func HandleZRem(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	_, _ = reader.ReadString('\n')
+	setKey, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading set key: ", err)
+		return
+	}
+	setKey = strings.TrimSpace(setKey)
+
+	_, _ = reader.ReadString('\n')
+	elementKey, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading element key: ", err)
+		return
+	}
+	elementKey = strings.TrimSpace(elementKey)
+
+	sortedSetInterface, exists := ZSetRegistry.Load(setKey)
+	if !exists {
+		_, err := conn.Write([]byte(":0\r\n"))
+		if err != nil {
+			log.Print("Writing Error: ", err)
+			return
+		}
+		return
+	}
+	sortedSet := sortedSetInterface.(*SortedSet)
+
+	_, exists = sortedSet.Elements[elementKey]
+	if !exists {
+		_, err := conn.Write([]byte(":0\r\n"))
+		if err != nil {
+			log.Print("Writing Error: ", err)
+			return
+		}
+		return
+	}
+
+	delete(sortedSet.Elements, elementKey)
+
+	for i, elem := range sortedSet.Order {
+		if elem.Name == elementKey {
+			sortedSet.Order = append(sortedSet.Order[:i], sortedSet.Order[i+1:]...)
+			break
+		}
+	}
+
+	_, err = conn.Write([]byte(":1\r\n"))
 	if err != nil {
 		log.Print("Writing Error: ", err)
 		return

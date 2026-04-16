@@ -165,6 +165,15 @@ func serveCommands(conn net.Conn, reader *bufio.Reader) {
 
 		case "ZRANGE":
 			HandleZRange(reader, conn, &authUser)
+
+		case "ZCARD":
+			HandleZCard(reader, conn, &authUser)
+
+		case "ZSCORE":
+			HandleZScore(reader, conn, &authUser)
+
+		case "ZREM":
+			HandleZRem(reader, conn, &authUser)
 		}
 
 	}
