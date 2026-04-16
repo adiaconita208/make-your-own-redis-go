@@ -1140,6 +1140,7 @@ func HandleZRank(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	}
 	sortedSet := sortedSetInterface.(*SortedSet)
 
+	sortedSet.RLock()
 	_, exists = sortedSet.Elements[elementKey]
 	if !exists {
 		_, err := conn.Write([]byte("$-1\r\n"))
@@ -1160,6 +1161,7 @@ func HandleZRank(reader *bufio.Reader, conn net.Conn, authUser *string) {
 			return
 		}
 	}
+	sortedSet.RUnlock()
 }
 
 func HandleZRange(reader *bufio.Reader, conn net.Conn, authUser *string) {
@@ -1198,6 +1200,7 @@ func HandleZRange(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	}
 	sortedSet := sortedSetInterface.(*SortedSet)
 
+	sortedSet.RLock()
 	if index1 < 0 {
 		index1 = max(0, len(sortedSet.Elements)+index1)
 	}
@@ -1223,6 +1226,7 @@ func HandleZRange(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	for i := index1; i <= index2; i++ {
 		response.WriteString(fmt.Sprintf("$%d\r\n%s\r\n", len(sortedSet.Order[i].Name), sortedSet.Order[i].Name))
 	}
+	sortedSet.RUnlock()
 
 	_, err = conn.Write([]byte(response.String()))
 	if err != nil {
@@ -1252,7 +1256,10 @@ func HandleZCard(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	}
 	sortedSet := sortedSetInterface.(*SortedSet)
 
+	sortedSet.RLock()
 	_, err = conn.Write([]byte(fmt.Sprintf(":%d\r\n", len(sortedSet.Elements))))
+	sortedSet.RUnlock()
+
 	if err != nil {
 		log.Print("Writing Error: ", err)
 		return
@@ -1278,7 +1285,7 @@ func HandleZScore(reader *bufio.Reader, conn net.Conn, authUser *string) {
 
 	sortedSetInterface, exists := ZSetRegistry.Load(setKey)
 	if !exists {
-		_, err := conn.Write([]byte("-1\r\n"))
+		_, err := conn.Write([]byte("$-1\r\n"))
 		if err != nil {
 			log.Print("Writing Error: ", err)
 			return
@@ -1287,6 +1294,7 @@ func HandleZScore(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	}
 	sortedSet := sortedSetInterface.(*SortedSet)
 
+	sortedSet.RLock()
 	element, exists := sortedSet.Elements[elementKey]
 	if !exists {
 		_, err := conn.Write([]byte("$-1\r\n"))
@@ -1296,6 +1304,7 @@ func HandleZScore(reader *bufio.Reader, conn net.Conn, authUser *string) {
 		}
 		return
 	}
+	sortedSet.RUnlock()
 
 	scoreStr := strconv.FormatFloat(element, 'f', -1, 64)
 
@@ -1335,6 +1344,7 @@ func HandleZRem(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	}
 	sortedSet := sortedSetInterface.(*SortedSet)
 
+	sortedSet.Lock()
 	_, exists = sortedSet.Elements[elementKey]
 	if !exists {
 		_, err := conn.Write([]byte(":0\r\n"))
@@ -1353,6 +1363,7 @@ func HandleZRem(reader *bufio.Reader, conn net.Conn, authUser *string) {
 			break
 		}
 	}
+	sortedSet.Unlock()
 
 	_, err = conn.Write([]byte(":1\r\n"))
 	if err != nil {
