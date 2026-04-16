@@ -69,7 +69,7 @@ func PropagateCommand(args ...string) {
 	for _, conn := range Replicas {
 		_, err := conn.Conn.Write([]byte(resp))
 		if err != nil {
-			log.Printf("Error propagating to replica %s: %s", conn, err)
+			log.Printf("Error propagating to replica %v: %s", conn, err)
 		}
 	}
 }
