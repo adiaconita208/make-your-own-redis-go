@@ -13,30 +13,6 @@ import (
 	"sync"
 )
 
-type User struct {
-	Passwords []string
-	Flags     []string
-}
-
-type LockableList struct {
-	sync.Mutex
-	elements []string
-	clients  []chan string
-}
-
-type Replica struct {
-	Conn   net.Conn
-	Offset int
-}
-
-type SilentConn struct {
-	net.Conn
-}
-
-func (s SilentConn) Write(b []byte) (int, error) {
-	return len(b), nil
-}
-
 var ServerMemory sync.Map
 var UserRegistry sync.Map
 var ListRegistry sync.Map
@@ -45,6 +21,7 @@ var ServerInfo sync.Map
 var Replicas []*Replica
 var ReplicasMu sync.Mutex
 var MasterOffset int
+var ZSetRegistry sync.Map
 
 func main() {
 
@@ -179,6 +156,15 @@ func serveCommands(conn net.Conn, reader *bufio.Reader) {
 
 		case "WAIT":
 			HandleWait(reader, conn, &authUser)
+
+		case "ZADD":
+			HandleZadd(reader, conn, &authUser)
+
+		case "ZRANK":
+			HandleZRank(reader, conn, &authUser)
+
+		case "ZRANGE":
+			HandleZRange(reader, conn, &authUser)
 		}
 
 	}
