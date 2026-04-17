@@ -184,6 +184,9 @@ func serveCommands(conn net.Conn, reader *bufio.Reader) {
 		case "GEODIST":
 			HandleGeoDist(reader, conn, &authUser)
 
+		case "GEOSEARCH":
+			HandleGeoSearch(reader, conn, &authUser)
+
 		}
 
 	}

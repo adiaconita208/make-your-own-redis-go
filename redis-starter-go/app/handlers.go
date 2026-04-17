@@ -9,6 +9,7 @@ import (
 	"io"
 	"log"
 	"net"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -1504,5 +1505,134 @@ func HandleGeoDist(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	if err != nil {
 		log.Print("Writing Error: ", err)
 		return
+	}
+}
+
+func HandleGeoSearch(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	_, _ = reader.ReadString('\n')
+	key, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading key: ", err)
+		return
+	}
+	key = strings.TrimSpace(key)
+
+	_, _ = reader.ReadString('\n')
+	_, _ = reader.ReadString('\n') // FROMLONLAT
+
+	_, _ = reader.ReadString('\n')
+	centerLonStr, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading center longitude: ", err)
+		return
+	}
+	centerLon, _ := strconv.ParseFloat(strings.TrimSpace(centerLonStr), 64)
+
+	_, _ = reader.ReadString('\n')
+	centerLatStr, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading center latitude: ", err)
+		return
+	}
+	centerLat, _ := strconv.ParseFloat(strings.TrimSpace(centerLatStr), 64)
+
+	_, _ = reader.ReadString('\n')
+	_, _ = reader.ReadString('\n') // BYRADIUS
+
+	_, _ = reader.ReadString('\n')
+	radiusStr, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading the maximum radius: ", err)
+		return
+	}
+	radius, _ := strconv.ParseFloat(strings.TrimSpace(radiusStr), 64)
+
+	_, _ = reader.ReadString('\n')
+	unit, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading the unit: ", err)
+		return
+	}
+	unit = strings.TrimSpace(unit)
+
+	radiusM := radius
+
+	switch unit {
+	case "km":
+		radiusM *= 1000
+
+	case "mi":
+		radiusM *= 1609.34
+
+	case "ft":
+		radiusM *= 0.3048
+	}
+
+	centerCoords := Coordinates{Latitude: centerLat, Longitude: centerLon}
+
+	sortedSetInterface, exists := ZSetRegistry.Load(key)
+	if !exists {
+		_, _ = conn.Write([]byte("*0\r\n"))
+		return
+	}
+	sortedSet := sortedSetInterface.(*SortedSet)
+
+	// sortedSet.RLock()
+	// defer sortedSet.RUnlock()
+
+	// var matchingMembers []string
+
+	// for _, elem := range sortedSet.Order {
+	// 	scoreFloat := sortedSet.Elements[elem.Name]
+	// 	coords := Decode(uint64(scoreFloat))
+
+	// 	dist := GeoDistance(centerCoords, coords)
+
+	// 	if dist <= radiusM {
+	// 		matchingMembers = append(matchingMembers, elem.Name)
+	// 	}
+	// }
+
+	ranges := Get9BoxRanges(centerLat, centerLon, radiusM)
+
+	sortedSet.RLock()
+	defer sortedSet.RUnlock()
+
+	matchingMembersMap := make(map[string]bool)
+
+	for _, r := range ranges {
+		startIndex := sort.Search(len(sortedSet.Order), func(i int) bool {
+			return uint64(sortedSet.Order[i].Score) >= r.Min
+		})
+
+		for i := startIndex; i < len(sortedSet.Order); i++ {
+			scoreUint := uint64(sortedSet.Order[i].Score)
+
+			if scoreUint > r.Max {
+				break
+			}
+
+			coords := Decode(scoreUint)
+			dist := GeoDistance(centerCoords, coords)
+
+			if dist <= radiusM {
+				matchingMembersMap[sortedSet.Order[i].Name] = true
+			}
+		}
+	}
+
+	var matchingMembers []string
+	for m := range matchingMembersMap {
+		matchingMembers = append(matchingMembers, m)
+	}
+
+	response := fmt.Sprintf("*%d\r\n", len(matchingMembers))
+	for _, m := range matchingMembers {
+		response += fmt.Sprintf("$%d\r\n%s\r\n", len(m), m)
+	}
+
+	_, err = conn.Write([]byte(response))
+	if err != nil {
+		log.Print("Writing error: ", err)
 	}
 }

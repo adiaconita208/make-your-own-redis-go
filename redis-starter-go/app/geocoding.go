@@ -21,6 +21,11 @@ type Coordinates struct {
 	Longitude float64
 }
 
+type ScoreRange struct {
+	Min uint64
+	Max uint64
+}
+
 func spreadInt32ToInt64(v uint32) uint64 {
 	result := uint64(v)
 	result = (result | (result << 16)) & 0x0000FFFF0000FFFF
@@ -100,4 +105,58 @@ func GeoDistance(a, b Coordinates) float64 {
 	d := u*u + math.Cos(lat1r)*math.Cos(lat2r)*v*v
 
 	return 2.0 * EARTH_RADIUS * math.Asin(math.Sqrt(d))
+}
+
+func Get9BoxRanges(centerLat, centerLon, radiusMeters float64) []ScoreRange {
+	depth := 26
+
+	latRad := centerLat * math.Pi / 180.0
+	cosLat := math.Cos(latRad)
+
+	if cosLat < 0.01 {
+		cosLat = 0.01 // Preventing division by zero
+	}
+
+	for depth > 1 {
+		degWidth := 360.0 / float64(uint32(1)<<depth)
+		metersWidth := degWidth * (math.Pi / 180.0) * EARTH_RADIUS * cosLat
+
+		degHeight := LATITUDE_RANGE / float64(uint32(1)<<depth)
+		metersHeight := degHeight * (math.Pi / 180.0) * EARTH_RADIUS
+
+		if metersWidth >= radiusMeters && metersHeight >= radiusMeters {
+			break
+		}
+		depth--
+	}
+
+	normalizedLat := math.Pow(2, 26) * (centerLat - MIN_LATITUDE) / LATITUDE_RANGE
+	normalizedLon := math.Pow(2, 26) * (centerLon - MIN_LONGITUDE) / LONGITUDE_RANGE
+
+	shift := 26 - depth
+	gridX := uint32(normalizedLon) >> shift
+	gridY := uint32(normalizedLat) >> shift
+
+	var ranges []ScoreRange
+	maxGrid := int(uint32(1<<depth) - 1)
+
+	for dx := -1; dx <= 1; dx++ {
+		for dy := -1; dy <= 1; dy++ {
+			nx := int(gridX) + dx
+			ny := int(gridY) + dy
+
+			if nx < 0 || nx > maxGrid || ny < 0 || ny > maxGrid {
+				continue
+			}
+
+			boxScore := interleave(uint32(nx), uint32(ny))
+
+			minScore := boxScore << (2 * shift)
+			maxScore := minScore | ((uint64(1) << (2 * shift)) - 1)
+
+			ranges = append(ranges, ScoreRange{Min: minScore, Max: maxScore})
+		}
+	}
+
+	return ranges
 }
