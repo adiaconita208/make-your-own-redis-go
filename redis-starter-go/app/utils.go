@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"net"
+	"sort"
 )
 
 const charset = "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789"
@@ -82,4 +83,40 @@ func OffsetByteSize(args ...string) int {
 	}
 
 	return size
+}
+
+func AddToSortedSet(setKey, elementKey string, score float64) int {
+	setInterface, _ := ZSetRegistry.LoadOrStore(setKey, &SortedSet{Elements: make(map[string]float64), Order: make([]SortedSetElement, 0)})
+	sortedSet := setInterface.(*SortedSet)
+
+	sortedSet.Lock()
+	added := 0
+	if _, exists := sortedSet.Elements[elementKey]; !exists {
+		added = 1
+	} else {
+		for i, elem := range sortedSet.Order {
+			if elem.Name == elementKey {
+				sortedSet.Order = append(sortedSet.Order[:i], sortedSet.Order[i+1:]...)
+				break
+			}
+		}
+	}
+	sortedSet.Elements[elementKey] = score
+
+	index := sort.Search(len(sortedSet.Order), func(i int) bool {
+		if sortedSet.Order[i].Score == score {
+			return sortedSet.Order[i].Name >= elementKey
+		}
+
+		return sortedSet.Order[i].Score > score
+	})
+
+	sortedSet.Order = append(sortedSet.Order, SortedSetElement{})
+
+	copy(sortedSet.Order[index+1:], sortedSet.Order[index:])
+
+	sortedSet.Order[index] = SortedSetElement{Name: elementKey, Score: score}
+	sortedSet.Unlock()
+
+	return added
 }

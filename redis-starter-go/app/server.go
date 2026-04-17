@@ -34,10 +34,10 @@ func main() {
 
 	flag.Parse()
 
-	log.Println("dir: ", *dir)
-	log.Println("dbfilename: ", *dbfilename)
-	log.Println("port: ", *port)
-	log.Println("replicaof: ", *replicaof)
+	// log.Println("dir: ", *dir)
+	// log.Println("dbfilename: ", *dbfilename)
+	// log.Println("port: ", *port)
+	// log.Println("replicaof: ", *replicaof)
 
 	EnvVariables.Store("dir", *dir)
 	EnvVariables.Store("dbfilename", *dbfilename)
@@ -174,6 +174,13 @@ func serveCommands(conn net.Conn, reader *bufio.Reader) {
 
 		case "ZREM":
 			HandleZRem(reader, conn, &authUser)
+
+		case "GEOADD":
+			HandleGeoAdd(reader, conn, &authUser)
+
+		case "GEOPOS":
+			HandleGeoPos(reader, conn, &authUser)
+
 		}
 
 	}

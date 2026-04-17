@@ -9,7 +9,6 @@ import (
 	"io"
 	"log"
 	"net"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -1071,37 +1070,7 @@ func HandleZadd(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	}
 	elementKey = strings.TrimSpace(elementKey)
 
-	setInterface, _ := ZSetRegistry.LoadOrStore(setKey, &SortedSet{Elements: make(map[string]float64), Order: make([]SortedSetElement, 0)})
-	sortedSet := setInterface.(*SortedSet)
-
-	sortedSet.Lock()
-	added := 0
-	if _, exists := sortedSet.Elements[elementKey]; !exists {
-		added = 1
-	} else {
-		for i, elem := range sortedSet.Order {
-			if elem.Name == elementKey {
-				sortedSet.Order = append(sortedSet.Order[:i], sortedSet.Order[i+1:]...)
-				break
-			}
-		}
-	}
-	sortedSet.Elements[elementKey] = score
-
-	index := sort.Search(len(sortedSet.Order), func(i int) bool {
-		if sortedSet.Order[i].Score == score {
-			return sortedSet.Order[i].Name >= elementKey
-		}
-
-		return sortedSet.Order[i].Score > score
-	})
-
-	sortedSet.Order = append(sortedSet.Order, SortedSetElement{})
-
-	copy(sortedSet.Order[index+1:], sortedSet.Order[index:])
-
-	sortedSet.Order[index] = SortedSetElement{Name: elementKey, Score: score}
-	sortedSet.Unlock()
+	added := AddToSortedSet(setKey, elementKey, score)
 
 	response := fmt.Sprintf(":%d\r\n", added)
 	_, err = conn.Write([]byte(response))
@@ -1368,6 +1337,124 @@ func HandleZRem(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	_, err = conn.Write([]byte(":1\r\n"))
 	if err != nil {
 		log.Print("Writing Error: ", err)
+		return
+	}
+
+}
+
+func HandleGeoAdd(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	_, _ = reader.ReadString('\n')
+	key, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading location key: ", err)
+		return
+	}
+	key = strings.TrimSpace(key)
+
+	_, _ = reader.ReadString('\n')
+	longStr, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading longitude: ", err)
+		return
+	}
+	longitude, _ := strconv.ParseFloat(strings.TrimSpace(longStr), 64)
+
+	_, _ = reader.ReadString('\n')
+	latStr, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading latitude: ", err)
+		return
+	}
+	latitude, _ := strconv.ParseFloat(strings.TrimSpace(latStr), 64)
+
+	_, _ = reader.ReadString('\n')
+	member, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading location member: ", err)
+		return
+	}
+	member = strings.TrimSpace(member)
+
+	if longitude < -180 || longitude > 180 {
+		_, _ = conn.Write([]byte(fmt.Sprintf("-ERR invalid longitude: %f\r\n", longitude)))
+		return
+	}
+
+	if latitude < -85.05112878 || latitude > 85.05112878 {
+		_, _ = conn.Write([]byte(fmt.Sprintf("-ERR invalid latitude: %f\r\n", latitude)))
+		return
+	}
+
+	score := Encode(latitude, longitude)
+
+	added := AddToSortedSet(key, member, float64(score))
+
+	response := fmt.Sprintf(":%d\r\n", added)
+	_, err = conn.Write([]byte(response))
+	if err != nil {
+		log.Print("Writing error: ", err)
+		return
+	}
+
+}
+
+func HandleGeoPos(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	_, _ = reader.ReadString('\n')
+	key, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading location key: ", err)
+		return
+	}
+	key = strings.TrimSpace(key)
+
+	members := make([]string, 0)
+
+	for reader.Buffered() > 0 {
+		_, _ = reader.ReadString('\n')
+		member, err := reader.ReadString('\n')
+		if err != nil {
+			log.Print("Error reading location member: ", err)
+			return
+		}
+		member = strings.TrimSpace(member)
+		members = append(members, member)
+	}
+
+	response := fmt.Sprintf("*%d\r\n", len(members))
+
+	sortedSetInterface, exists := ZSetRegistry.Load(key)
+	if !exists {
+		for range len(members) {
+			response += "*-1\r\n"
+		}
+		_, err = conn.Write([]byte(response))
+		if err != nil {
+			log.Print("Writing error: ", err)
+			return
+		}
+		return
+	}
+
+	sortedSet := sortedSetInterface.(*SortedSet)
+
+	sortedSet.RLock()
+	defer sortedSet.RUnlock()
+	for _, m := range members {
+		element, exists := sortedSet.Elements[m]
+		if !exists {
+			response += "*-1\r\n"
+			continue
+		}
+
+		coordinates := Decode(uint64(element))
+		longStr := strconv.FormatFloat(coordinates.Longitude, 'f', -1, 64)
+		latStr := strconv.FormatFloat(coordinates.Latitude, 'f', -1, 64)
+		response += fmt.Sprintf("*2\r\n$%d\r\n%s\r\n$%d\r\n%s\r\n", len(longStr), longStr, len(latStr), latStr)
+	}
+
+	_, err = conn.Write([]byte(response))
+	if err != nil {
+		log.Print("Writing error: ", err)
 		return
 	}
 
