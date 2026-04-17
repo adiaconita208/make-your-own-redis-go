@@ -1459,3 +1459,50 @@ func HandleGeoPos(reader *bufio.Reader, conn net.Conn, authUser *string) {
 	}
 
 }
+
+func HandleGeoDist(reader *bufio.Reader, conn net.Conn, authUser *string) {
+	_, _ = reader.ReadString('\n')
+	key, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading location key: ", err)
+		return
+	}
+	key = strings.TrimSpace(key)
+
+	_, _ = reader.ReadString('\n')
+	member1, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading first member: ", err)
+		return
+	}
+	member1 = strings.TrimSpace(member1)
+
+	_, _ = reader.ReadString('\n')
+	member2, err := reader.ReadString('\n')
+	if err != nil {
+		log.Print("Error reading second member: ", err)
+		return
+	}
+	member2 = strings.TrimSpace(member2)
+
+	sortedSetInterface, _ := ZSetRegistry.Load(key)
+	sortedSet := sortedSetInterface.(*SortedSet)
+
+	sortedSet.RLock()
+
+	coordinates1 := Decode(uint64(sortedSet.Elements[member1]))
+	coordinates2 := Decode(uint64(sortedSet.Elements[member2]))
+
+	sortedSet.RUnlock()
+
+	distance := GeoDistance(coordinates1, coordinates2)
+	distanceStr := strconv.FormatFloat(distance, 'f', 5, 64)
+
+	response := fmt.Sprintf("$%d\r\n%s\r\n", len(distanceStr), distanceStr)
+
+	_, err = conn.Write([]byte(response))
+	if err != nil {
+		log.Print("Writing Error: ", err)
+		return
+	}
+}

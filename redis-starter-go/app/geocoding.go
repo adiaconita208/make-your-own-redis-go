@@ -12,6 +12,8 @@ const (
 
 	LATITUDE_RANGE  = MAX_LATITUDE - MIN_LATITUDE
 	LONGITUDE_RANGE = MAX_LONGITUDE - MIN_LONGITUDE
+
+	EARTH_RADIUS = 6372797.560856
 )
 
 type Coordinates struct {
@@ -82,4 +84,20 @@ func Decode(geoCode uint64) Coordinates {
 	gridLongitudeNumber := compactInt64ToInt32(y)
 
 	return convertGridNumbersToCoordinates(gridLatitudeNumber, gridLongitudeNumber)
+}
+
+func GeoDistance(a, b Coordinates) float64 {
+	lon1r := a.Longitude * (math.Pi / 180)
+	lon2r := b.Longitude * (math.Pi / 180)
+
+	v := math.Sin((lon2r - lon1r) / 2)
+
+	lat1r := a.Latitude * (math.Pi / 180)
+	lat2r := b.Latitude * (math.Pi / 180)
+
+	u := math.Sin((lat2r - lat1r) / 2)
+
+	d := u*u + math.Cos(lat1r)*math.Cos(lat2r)*v*v
+
+	return 2.0 * EARTH_RADIUS * math.Asin(math.Sqrt(d))
 }
