@@ -27,10 +27,20 @@ func main() {
 
 	fmt.Println("Full OS Args:", os.Args)
 
-	dir := flag.String("dir", "/tmp/redis-data", "File path to where RDB file is stored")
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Print("Warning: could not get the current working directory: ", err)
+		cwd = "."
+	}
+
+	dir := flag.String("dir", cwd, "The base directory where redis stores its data files")
 	dbfilename := flag.String("dbfilename", "rdbfiles", "RDB File")
 	port := flag.Int("port", 6379, "The port the server will run on")
 	replicaof := flag.String("replicaof", "master", "The server the replica is connected to")
+	appendonly := flag.String("appendonly", "no", "Controls whether AOF persistence is enabled or disabled")
+	appenddirname := flag.String("appenddirname", "appendonlydir", "The subdirectory under dir where AOF and manifest files are stored")
+	appendfilename := flag.String("appendfilename", "appendonly.aof", "The name of the append-only file that records write operations")
+	appendfsync := flag.String("appendfsync", "everysec", "How often buffered writes are flushed to the AOF file on disk")
 
 	flag.Parse()
 
@@ -41,6 +51,10 @@ func main() {
 
 	EnvVariables.Store("dir", *dir)
 	EnvVariables.Store("dbfilename", *dbfilename)
+	EnvVariables.Store("appendonly", *appendonly)
+	EnvVariables.Store("appenddirname", *appenddirname)
+	EnvVariables.Store("appendfilename", *appendfilename)
+	EnvVariables.Store("appendfsync", *appendfsync)
 
 	LoadRDB(*dir, *dbfilename)
 

@@ -95,6 +95,11 @@ test_optimistic_locking_with_redis: build
 	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\": \"jb7\", \"tester_log_prefix\": \"stage-1001\", \"title\": \"The WATCH command\"},{\"slug\": \"jq9\", \"tester_log_prefix\": \"stage-1002\", \"title\": \"WATCH inside transaction\"},{\"slug\": \"mh8\", \"tester_log_prefix\": \"stage-1003\", \"title\": \"Tracking key modifications\"},{\"slug\": \"fp0\", \"tester_log_prefix\": \"stage-1004\", \"title\": \"Watching multiple keys\"},{\"slug\": \"uo9\", \"tester_log_prefix\": \"stage-1005\", \"title\": \"Watching missing keys\"},{\"slug\": \"bn1\", \"tester_log_prefix\": \"stage-1006\", \"title\": \"The UNWATCH command\"},{\"slug\": \"fn4\", \"tester_log_prefix\": \"stage-1007\", \"title\": \"Unwatch on EXEC\"},{\"slug\": \"hq1\", \"tester_log_prefix\": \"stage-1008\", \"title\": \"Unwatch on DISCARD\"}]" \
 	dist/main.out
 
+test_aof_with_redis: build
+	CODECRAFTERS_REPOSITORY_DIR=/Users/diaconita/Desktop/redis-project/redis-starter-go \
+	CODECRAFTERS_TEST_CASES_JSON="[{\"slug\":\"uj3\",\"tester_log_prefix\":\"stage-1101\",\"title\":\"Default AOF options\"},{\"slug\":\"vd9\",\"tester_log_prefix\":\"stage-1102\",\"title\":\"AOF options from flags\"},{\"slug\":\"fm0\",\"tester_log_prefix\":\"stage-1103\",\"title\":\"Create append-only directory\"},{\"slug\":\"dw4\",\"tester_log_prefix\":\"stage-1104\",\"title\":\"Create append-only file\"},{\"slug\":\"pb9\",\"tester_log_prefix\":\"stage-1105\",\"title\":\"Create AOF manifest file\"},{\"slug\":\"dc8\",\"tester_log_prefix\":\"stage-1106\",\"title\":\"Write single command\"},{\"slug\":\"fi1\",\"tester_log_prefix\":\"stage-1107\",\"title\":\"Write multiple commands\"},{\"slug\":\"ep6\",\"tester_log_prefix\":\"stage-1108\",\"title\":\"Filter commands to write\"},{\"slug\":\"xz2\",\"tester_log_prefix\":\"stage-1109\",\"title\":\"Replay a single command\"},{\"slug\":\"kn2\",\"tester_log_prefix\":\"stage-1110\",\"title\":\"Replay multiple commands\"}]" \
+	dist/main.out
+
 test_all_with_redis:
 	make test_base_with_redis || true
 	make test_repl_with_redis || true
@@ -107,6 +112,8 @@ test_all_with_redis:
 	make test_geospatial_with_redis || true
 	make test_auth_with_redis || true
 	make test_optimistic_locking_with_redis || true
+	make test_aof_with_redis || true
+
 
 setup:
 	echo "Setting up redis-tester prerequisites for Linux"
@@ -114,6 +121,10 @@ setup:
 	curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
 	sudo chmod 644 /usr/share/keyrings/redis-archive-keyring.gpg
 	@echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(shell lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+
+	echo 'Package: redis*' | sudo tee /etc/apt/preferences.d/redis-8.4.pref
+	echo 'Pin: version 6:8.4*' | sudo tee -a /etc/apt/preferences.d/redis-8.4.pref
+	echo 'Pin-Priority: 1000' | sudo tee -a /etc/apt/preferences.d/redis-8.4.pref
 
 	sudo apt-get update && sudo apt-get install redis -y
 
