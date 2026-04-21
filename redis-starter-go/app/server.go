@@ -8,6 +8,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
@@ -22,6 +23,8 @@ var Replicas []*Replica
 var ReplicasMu sync.Mutex
 var MasterOffset int
 var ZSetRegistry sync.Map
+var AofFile *os.File
+var AofMu sync.Mutex
 
 func main() {
 
@@ -56,8 +59,6 @@ func main() {
 	EnvVariables.Store("appendfilename", *appendfilename)
 	EnvVariables.Store("appendfsync", *appendfsync)
 
-	LoadRDB(*dir, *dbfilename)
-
 	strPort := strconv.Itoa(*port)
 
 	listener, err := net.Listen("tcp", ":"+strPort)
@@ -83,6 +84,54 @@ func main() {
 		ServerInfo.Store("master_repl_offset", "0")
 	}
 
+	if *appendonly == "yes" {
+		aofDirPath := filepath.Join(*dir, *appenddirname)
+
+		err = os.MkdirAll(aofDirPath, 0755)
+		if err != nil {
+			log.Fatal("Failed to create AOF directory: ", err)
+		}
+
+		manifestFileName := fmt.Sprintf("%s.manifest", *appendfilename)
+		manifestFilePath := filepath.Join(aofDirPath, manifestFileName)
+
+		var activeFileName string
+
+		mainfestData, err := os.ReadFile(manifestFilePath)
+		if err == nil {
+			lines := strings.Split(string(mainfestData), "\n")
+			for _, line := range lines {
+				if strings.Contains(line, "type i") {
+					parts := strings.Fields(line)
+					if len(parts) >= 2 && parts[0] == "file" {
+						activeFileName = parts[1]
+						break
+					}
+				}
+			}
+		}
+
+		if activeFileName == "" {
+			activeFileName = fmt.Sprintf("%s.1.incr.aof", *appendfilename)
+			manifestContent := fmt.Sprintf("file %s seq 1 type i\n", activeFileName)
+			err = os.WriteFile(manifestFilePath, []byte(manifestContent), 0644)
+			if err != nil {
+				log.Fatal("Failed to write manifest file: ", err)
+			}
+		}
+		aofFilePath := filepath.Join(aofDirPath, activeFileName)
+
+		AOFParser(aofFilePath)
+
+		AofFile, err = os.OpenFile(aofFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		if err != nil {
+			log.Fatal("Failed to open AOF file: ", err)
+		}
+
+	} else {
+		LoadRDB(*dir, *dbfilename)
+	}
+
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
@@ -91,6 +140,7 @@ func main() {
 		}
 		go handleConnection(conn)
 	}
+
 }
 
 func handleConnection(conn net.Conn) {

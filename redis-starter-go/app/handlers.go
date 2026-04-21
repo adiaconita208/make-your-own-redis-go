@@ -96,6 +96,7 @@ func HandleSet(reader *bufio.Reader, conn net.Conn, authUser *string) {
 
 	if role, _ := ServerInfo.Load("role"); role == "master" {
 		PropagateCommand("SET", key, value)
+		AppendToAof("SET", key, value)
 	}
 
 	_, err = conn.Write([]byte("+OK\r\n"))

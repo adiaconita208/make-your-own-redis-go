@@ -2,11 +2,17 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"fmt"
+	"io"
 	"log"
 	"math/rand"
 	"net"
+	"os"
 	"sort"
+	"strconv"
+	"strings"
+	"time"
 )
 
 const charset = "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789"
@@ -119,4 +125,90 @@ func AddToSortedSet(setKey, elementKey string, score float64) int {
 	sortedSet.Unlock()
 
 	return added
+}
+
+func AppendToAof(args ...string) {
+	if AofFile == nil {
+		return
+	}
+
+	resp := fmt.Sprintf("*%d\r\n", len(args))
+	for _, arg := range args {
+		resp += fmt.Sprintf("$%d\r\n%s\r\n", len(arg), arg)
+	}
+
+	AofMu.Lock()
+	defer AofMu.Unlock()
+
+	_, err := AofFile.Write([]byte(resp))
+
+	if err != nil {
+		log.Print("Error writing to AOF: ", err)
+		return
+	}
+
+	_ = AofFile.Sync()
+}
+
+func AOFParser(filepath string) {
+	file, err := os.Open(filepath)
+	if err != nil {
+		log.Print("Error: AOF file does not exist or could not be opened: ", err)
+		return
+	}
+	defer file.Close()
+
+	reader := bufio.NewReader(file)
+
+	for {
+		line, err := reader.ReadString('\n')
+		if err != nil {
+			if err != io.EOF {
+				log.Print("Error reading from AOF file: ", err)
+				return
+			}
+			break
+		}
+
+		if !strings.HasPrefix(line, "*") {
+			continue
+		}
+
+		numArgsStr := strings.TrimSpace(strings.TrimPrefix(line, "*"))
+		numArgs, _ := strconv.Atoi(numArgsStr)
+
+		var args []string
+		for i := 0; i < numArgs; i++ {
+			_, _ = reader.ReadString('\n')
+			arg, _ := reader.ReadString('\n')
+			args = append(args, strings.TrimSpace(arg))
+		}
+
+		if len(args) == 0 {
+			continue
+		}
+
+		cmd := strings.ToUpper(args[0])
+
+		switch cmd {
+		case "SET":
+			if len(args) >= 3 {
+				key := args[1]
+				val := args[2]
+				ServerMemory.Store(key, val)
+
+				if len(args) >= 5 && strings.ToUpper(args[3]) == "PX" {
+					px, _ := strconv.Atoi(args[4])
+					go func(k string, t int) {
+						ctx, cancel := context.WithTimeout(context.Background(), time.Duration(t)*time.Millisecond)
+						defer cancel()
+						<-ctx.Done()
+						ServerMemory.Delete(k)
+					}(key, px)
+				}
+			}
+		}
+
+	}
+
 }
